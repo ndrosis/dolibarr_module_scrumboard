@@ -1,0 +1,84 @@
+<?php
+	require('config.php');
+
+	llxHeader('', $langs->trans('Tasks') , '','',0,0, array('/scrumboard/script/scrum.js.php'));
+	
+	$id_projet = (int)GETPOST('id');
+	
+?>		<div class="content">
+		[tpl.tabs;strconv=no]
+			<table id="scrum">
+				<tr>
+					<td>__tr(Ideas)__ <a href="javascript:project_create_task(<?=$id_projet ?>)">__tr(Add task)__</a></td></td>
+					<td>__tr(toDo)__</td></td>
+					<td>__tr(inProgress)__</td></td>
+					<td>__tr(finish)__</td></td>
+				</tr>
+				<tr>
+					<td class="projectDrag droppable" id="task-idea" rel="idea">
+						<ul id="list-task-idea" class="task-list" rel="idea">
+						
+						</ul>
+					</td>
+					<td class="projectDrag droppable" id="task-todo" rel="todo">
+						<ul id="list-task-todo" class="task-list" rel="todo">
+						
+						</ul>
+					</td>
+					<td class="projectDrag droppable" id="task-inprogress" rel="inprogress">
+						<ul id="list-task-inprogress" class="task-list" rel="inprogress">
+						
+						</ul>
+					</td>
+					<td class="projectDrag droppable" id="task-finish" rel="finish">
+						<ul id="list-task-finish" class="task-list" rel="finish">
+						
+						</ul>
+					</td>
+				</tr>
+			</table>
+		
+			<a href="[button.href;block=a]" class="[button.class]">[button.label]</a> 
+		
+		</div>
+		
+		<div style="display:none">
+			
+			<ul><li id="task-blank">
+				<div class="min-view">
+				<a class="title">title</a> 
+				</div>
+				<div class="view">
+					<input name="title" rel="name" value=""/>
+					<div>
+						<select name="point" rel="point"><option value="[point.$; block=option]">[point.val]</option></select>
+						<select name="status" rel="status"><option value="[status.$; block=option]">[status.val]</option></select> 
+						<select name="type" rel="type"><option value="[type.$; block=option]">[type.val]</option></select> 
+					 </div>
+					
+					<textarea name="description" rel="description" rows="3"></textarea>
+					<div>
+					<a class="addTime">__tr(addTime)__</a>
+					<a class="save">__tr(Save)__</a>
+					</div>
+				</div>
+				</li>
+			</ul>
+			
+		</div>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				
+				project_get_tasks(<?=$id_projet ?>, 'list-task-idea', 'idea');
+				project_get_tasks(<?=$id_projet ?>, 'list-task-todo', 'todo');
+				project_get_tasks(<?=$id_projet ?>, 'list-task-inprogress', 'inprogress');
+				project_get_tasks(<?=$id_projet ?>, 'list-task-finish', 'finish');
+				
+				project_init_change_type(<?=$id_projet ?>);
+			});
+		</script>
+		
+<?
+
+	llxFooter();
