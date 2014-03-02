@@ -1,6 +1,6 @@
 <?php
 
-require ('../../../inc.php');
+require ('../config.php');
 
 $get = GETPOST('get','alpha');
 $put = GETPOST('put','alpha');
@@ -84,14 +84,24 @@ function _task(&$db, $id_task, $values) {
 }
 
 function _tasks(&$db, $id_project, $status) {
-	
-	$TId = TRequeteCore::_get_id_by_sql($db, "SELECT id FROM ".DB_PREFIX."project_task WHERE id_project=".$id_project." AND status='".$status."' ORDER BY rank");
-	$TTask = array();
-	foreach($TId as $id) {
-		$t=new TTask;
-		$t->load($db, $id);
 		
-		$TTask[] = $t->get_values();
+	if($status=='ideas') {
+		$status=0;
+		$progress=0;
+	}	
+	else if($status=='todo') {
+		$progress=0;
+	}
+		
+	$res = $db->query("SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task WHEREfk_projet=$id_project AND progress IN ($progress)");	
+		
+		
+	$TTask = array();
+	while($obj = $db->fetch_object($res)) {
+		$t=new Task($db);
+		$t->fetch($obj->rowid);
+		
+		$TTask[] = _as_array($t);
 	}
 	
 	return $TTask;
