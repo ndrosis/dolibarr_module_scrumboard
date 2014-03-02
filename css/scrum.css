@@ -12,7 +12,7 @@ td.projectDrag {
 	
 }
 td.projectDrag {
-	width:25%;
+	width:33%;
 	min-width: 200px;	
 	padding:1px 1px 1px 1px;
 }
@@ -29,12 +29,16 @@ td.projectDrag {
 	background: #2AA8B9;
 	color:#fff;
 	font-size:14px;
-	padding:10px 20px 10px 40px;
+	padding:10px 10px 10px 10px;
 	overflow: hidden;
 	position:relative;
 	box-shadow: 1px 1px 1px #999999;
 	border:1px solid #2AA8B9;
 	border-bottom: 1px solid #194B7E;
+}
+.projectDrag ul li span[rel=progress] {
+	float:right;
+	display:none;
 }
 .projectDrag ul li.idea {
 	background: #eee;
@@ -44,6 +48,9 @@ td.projectDrag {
 }
 .projectDrag ul li.inprogress {
 	background: green;
+}
+.projectDrag ul li.inprogress span[rel=progress] {
+	display:block;
 }
 .projectDrag ul .ui-state-highlight {
 	background: #fff;

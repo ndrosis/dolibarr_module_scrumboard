@@ -1,3 +1,6 @@
+<?php
+	require('../config.php');
+?>
 function project_get_tasks(id_project, liste, status) {
 	
 	$.ajax({
@@ -51,15 +54,9 @@ function project_refresh_task(id_project, task) {
 	$item.removeClass('idea todo inprogress finish');
 	$item.addClass(task.status);
 	
-	$item.find('[rel=name]').attr('id','task-name-'+task.id).val(task.name);
-	$item.find('[rel=status]').attr('id','task-status-'+task.id).val(task.status);
-	$item.find('[rel=type]').attr('id','task-type-'+task.id).val(task.type);
-	$item.find('[rel=point]').attr('id','task-point-'+task.id).val(task.point);
-	$item.find('[rel=description]').attr('id','task-description-'+task.id).val(task.description);
-	
-	$item.find('a.title').attr("href", 'javascript:project_develop_task('+task.id+');').html(task.name);
-	$item.find('a.save').attr("href", 'javascript:project_getsave_task('+id_project+','+task.id+');project_develop_task('+task.id+');');
-	
+	$item.find('[rel=progress]').html(task.progress+'%');
+	$item.find('[rel=label]').html(task.label);
+	$item.find('[rel=ref]').html(task.ref).attr("href", '<?=dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
 }
 function project_get_task(id_project, id_task) {
@@ -149,10 +146,7 @@ function project_save_task(id_project, task) {
 			,id : task.id
 			,status : task.status
 			,id_project : id_project
-			,type : task.type
-			,description: task.description
-			,point : task.point
-			,name : task.name
+			,label : task.label
 		}
 		,dataType: 'json'
 		,type:'POST'

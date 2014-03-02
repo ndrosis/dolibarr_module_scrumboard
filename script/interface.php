@@ -12,7 +12,7 @@ function _get(&$db, $case) {
 	switch ($case) {
 		case 'tasks' :
 			
-			print json_encode(_tasks($db, (int)$_REQUEST['id_project'], (int)$_REQUEST['status']));
+			print json_encode(_tasks($db, (int)$_REQUEST['id_project'], $_REQUEST['status']));
 
 			break;
 		case 'task' :
@@ -49,7 +49,7 @@ function _as_array(&$object, $recursif=false) {
 function _put(&$db, $case) {
 	switch ($case) {
 		case 'task' :
-			__out(_task($db, (int)GETPOST('id'), $_REQUEST));
+			print json_encode(_task($db, (int)GETPOST('id'), $_REQUEST));
 			break;
 		case 'sort-task' :
 			
@@ -64,36 +64,72 @@ function _sort_task(&$db, $TTask) {
 	foreach($TTask as $rank=>$id) {
 		$task=new Task($db);
 		$task->fetch($id);
-		$task->rank = $rank;
+		$task->rang = $rank;
 		$task->update($db);
 	}
 	
 }
-function _task(&$db, $id_task, $values) {
-	$task=new TTask;
-	if($id_task) $task->load($db, $id_task);
-	$task->set_values($values);
+function _set_values(&$object, $values) {
 	
-	$task->save($db);
-	
-	if(empty($task->name)) {
-		$task->name = __tr("Task").' '.$task->getId();
-		$task->save($db);	
+	foreach($values as $k=>$v) {
+		
+		if(isset($object->{$k})) {
+			
+			$object->{$k} = $v;
+			
+		}
+		
 	}
-	return $task->get_values();
+	
+}
+function _task(&$db, $id_task, $values) {
+global $user;
+
+	$task=new Task($db);
+	if($id_task) $task->fetch($id_task);
+	
+	_set_values($task, $values);
+	
+	if($values['status']=='inprogress') {
+		if($task->progress==0)$task->progress = 5;
+		else if($task->progress==100)$task->progress = 95;
+	}
+	else if($values['status']=='finish') {
+		$task->progress = 100;
+	}	
+	else if($values['status']=='todo') {
+		$task->progress = 0;
+	}	
+	
+	$task->status = $values['status'];
+	
+	$task->update($user);
+	
+	return _as_array($task);
 }
 
 function _tasks(&$db, $id_project, $status) {
 		
 	if($status=='ideas') {
-		$status=0;
-		$progress=0;
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
+		WHERE fk_projet=$id_project AND progress=0 AND datee IS NULL
+		ORDER BY rang";
 	}	
 	else if($status=='todo') {
-		$progress=0;
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
+		WHERE fk_projet=$id_project AND progress=0 ORDER BY rang";
+	}
+	else if($status=='inprogress') {
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
+		WHERE fk_projet=$id_project AND progress>0 AND progress<100 ORDER BY rang";
+	}
+	else if($status=='finish') {
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
+		WHERE fk_projet=$id_project AND progress=100 
+		ORDER BY rang";
 	}
 		
-	$res = $db->query("SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task WHEREfk_projet=$id_project AND progress IN ($progress)");	
+	$res = $db->query($sql);	
 		
 		
 	$TTask = array();
@@ -101,7 +137,7 @@ function _tasks(&$db, $id_project, $status) {
 		$t=new Task($db);
 		$t->fetch($obj->rowid);
 		
-		$TTask[] = _as_array($t);
+		$TTask[] = array_merge( _as_array($t) , array('status'=>$status));
 	}
 	
 	return $TTask;
