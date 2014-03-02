@@ -51,7 +51,7 @@ class modscrumboard extends DolibarrModules
 
         // Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
         // It is used to group modules in module setup page
-        $this->family = "other";
+        $this->family = "projects";
         // Module label (no space allowed)
         // used if translation string 'ModuleXXXName' not found
         // (where XXX is value of numeric property 'numero' of module)
@@ -147,6 +147,7 @@ class modscrumboard extends DolibarrModules
             //	'objecttype:+tabname2:Title2:langfile@scrumboard:$user->rights->othermodule->read:/scrumboard/mynewtab2.php?id=__ID__',
             //	// To remove an existing tab identified by code tabname
             //	'objecttype:-tabname'
+            'project:+scrumboard:ScrumBoard:scrumboard@scrumboard:$user->rights->scrumboard->read:/scrumboard/scrum.php?id=__ID__'
         );
         // where objecttype can be
         // 'thirdparty'			to add a tab in third party view
