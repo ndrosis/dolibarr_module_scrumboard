@@ -147,7 +147,7 @@ class modscrumboard extends DolibarrModules
             //	'objecttype:+tabname2:Title2:langfile@scrumboard:$user->rights->othermodule->read:/scrumboard/mynewtab2.php?id=__ID__',
             //	// To remove an existing tab identified by code tabname
             //	'objecttype:-tabname'
-            'project:+scrumboard:ScrumBoard:scrumboard@scrumboard:$user->rights->scrumboard->read:/scrumboard/scrum.php?id=__ID__'
+            'project:+scrumboard:ScrumBoard:scrumboard@scrumboard::/scrumboard/scrum.php?id=__ID__'
         );
         // where objecttype can be
         // 'thirdparty'			to add a tab in third party view
@@ -228,7 +228,7 @@ class modscrumboard extends DolibarrModules
 
         // Permissions
         $this->rights = array(); // Permission array used by this module
-        $r = 0;
+
 
         // Add here list of permission defined by
         // an id, a label, a boolean and two constant strings.

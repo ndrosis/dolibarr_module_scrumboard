@@ -1,0 +1,72 @@
+#scrum {
+	width:100%;
+	border-spacing: 10px;
+}
+
+td.projectDrag {
+	vertical-align: top;
+	background: #fff;
+	border:1px solid #2AA8B9;
+	width:50%;
+	padding:10px 20px;
+	
+}
+td.projectDrag {
+	width:25%;
+	min-width: 200px;	
+	padding:1px 1px 1px 1px;
+}
+.projectDrag ul {
+	margin:0 0 0 0;
+	padding:0 0 0 0;
+	min-height: 500px;
+}
+.projectDrag ul li:hover {
+	cursor: pointer;	
+}
+.projectDrag ul li {
+	display:block;
+	background: #2AA8B9;
+	color:#fff;
+	font-size:14px;
+	padding:10px 20px 10px 40px;
+	overflow: hidden;
+	position:relative;
+	box-shadow: 1px 1px 1px #999999;
+	border:1px solid #2AA8B9;
+	border-bottom: 1px solid #194B7E;
+}
+.projectDrag ul li.idea {
+	background: #eee;
+}
+.projectDrag ul li.idea a {
+	color:#000;	
+}
+.projectDrag ul li.inprogress {
+	background: green;
+}
+.projectDrag ul .ui-state-highlight {
+	background: #fff;
+	height:30px;
+	border:1px solid yellow;
+}
+
+.projectDrag ul li div.view {
+	display: none;
+}
+.projectDrag ul li a.save {
+	font-weight: normal;
+	color:#fff;
+	text-decoration: none;
+	background: blue;
+	border-radius: 5px;
+	padding:3px;
+}
+.projectDrag ul li.finish {
+	background: grey;
+}
+
+.projectDrag ul li a {
+	color:#fff;
+}
+

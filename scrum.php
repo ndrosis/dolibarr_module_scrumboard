@@ -5,14 +5,16 @@
 	
 	$id_projet = (int)GETPOST('id');
 	
-?>		<div class="content">
-		[tpl.tabs;strconv=no]
+?>
+<link rel="stylesheet" type="text/css" title="default" href="<?=dol_buildpath('/scrumboard/css/scrum.css') ?>">
+
+		<div class="content">
 			<table id="scrum">
 				<tr>
-					<td>__tr(Ideas)__ <a href="javascript:project_create_task(<?=$id_projet ?>)">__tr(Add task)__</a></td></td>
-					<td>__tr(toDo)__</td></td>
-					<td>__tr(inProgress)__</td></td>
-					<td>__tr(finish)__</td></td>
+					<td><?=$langs->trans('Ideas'); ?></td></td>
+					<td><?=$langs->trans('toDo'); ?>		</td></td>
+					<td><?=$langs->trans('inProgress'); ?></td></td>
+					<td><?=$langs->trans('finish'); ?></td></td>
 				</tr>
 				<tr>
 					<td class="projectDrag droppable" id="task-idea" rel="idea">
@@ -38,8 +40,6 @@
 				</tr>
 			</table>
 		
-			<a href="[button.href;block=a]" class="[button.class]">[button.label]</a> 
-		
 		</div>
 		
 		<div style="display:none">
@@ -58,8 +58,8 @@
 					
 					<textarea name="description" rel="description" rows="3"></textarea>
 					<div>
-					<a class="addTime">__tr(addTime)__</a>
-					<a class="save">__tr(Save)__</a>
+					<a class="addTime"><?=$langs->trans('addTime'); ?></a>
+					<a class="save"><?=$langs->trans('Save'); ?></a>
 					</div>
 				</div>
 				</li>
