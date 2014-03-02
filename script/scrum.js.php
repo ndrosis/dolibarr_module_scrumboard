@@ -2,6 +2,7 @@
 	require('../config.php');
 ?>
 function project_get_tasks(id_project, liste, status) {
+	$('#'+liste).empty();
 	
 	$.ajax({
 		url : "./script/interface.php"
@@ -159,4 +160,45 @@ function project_save_task(id_project, task) {
 }
 function project_develop_task(id_task) {
 	$('#task-'+id_task+' div.view').toggle();
+}
+function loadTasks(id_projet) {
+	
+					/*project_get_tasks(id_projet, 'list-task-idea', 'idea');*/
+				project_get_tasks(id_projet , 'list-task-todo', 'todo');
+				project_get_tasks(id_projet , 'list-task-inprogress', 'inprogress');
+				project_get_tasks(id_projet , 'list-task-finish', 'finish');
+				
+			
+	
+}
+function create_task(id_projet) {
+	
+	if($('#dialog-create-task').length==0) {
+		$('body').append('<div id="dialog-create-task"></div>');
+	}
+	var url ="<?= dol_buildpath('/projet/tasks.php?action=create&id=',1) ?>"+id_projet
+		
+	$('#dialog-create-task').load(url+" div.fiche form",function() {
+		
+		$('#dialog-create-task input[name=cancel]').remove();
+		$('#dialog-create-task form').submit(function() {
+			
+			$.post($(this).attr('action'), $(this).serialize(), function() {
+				loadTasks(id_projet);
+			});
+		
+			$('#dialog-create-task').dialog('close');			
+			
+			return false;
+	
+			
+		});
+		
+		$(this).dialog({
+			title: "<?=$langs->trans('AddTask') ?>"
+			,width:800
+			,modal:true
+		});
+		
+	});
 }
