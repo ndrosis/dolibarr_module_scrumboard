@@ -39,30 +39,6 @@
 <link rel="stylesheet" type="text/css" title="default" href="<?=dol_buildpath('/scrumboard/css/scrum.css',1) ?>">
 
 		<div class="content">
-<?php	
-	/*
-	 * Actions
-	*/
-	print '<div class="tabsAction">';
-
-	if ($user->rights->projet->all->creer || $user->rights->projet->creer)
-	{
-		if ($object->public || $object->restrictedProjectArea($user,'write') > 0)
-		{
-			print '<a class="butAction" href="javascript:create_task('.$object->id.');">'.$langs->trans('AddTask').'</a>';
-		}
-		else
-		{
-			print '<a class="butActionRefused" href="#" title="'.$langs->trans("NotOwnerOfProject").'">'.$langs->trans('AddTask').'</a>';
-		}
-	}
-	else
-	{
-		print '<a class="butActionRefused" href="#" title="'.$langs->trans("NoPermission").'">'.$langs->trans('AddTask').'</a>';
-	}
-
-	print '</div>';
-?>
 			
 			<table id="scrum">
 				<tr>
@@ -94,6 +70,30 @@
 					</td>
 				</tr>
 			</table>
+<?php	
+	/*
+	 * Actions
+	*/
+	print '<div class="tabsAction">';
+
+	if ($user->rights->projet->all->creer || $user->rights->projet->creer)
+	{
+		if ($object->public || $object->restrictedProjectArea($user,'write') > 0)
+		{
+			print '<a class="butAction" href="javascript:create_task('.$object->id.');">'.$langs->trans('AddTask').'</a>';
+		}
+		else
+		{
+			print '<a class="butActionRefused" href="#" title="'.$langs->trans("NotOwnerOfProject").'">'.$langs->trans('AddTask').'</a>';
+		}
+	}
+	else
+	{
+		print '<a class="butActionRefused" href="#" title="'.$langs->trans("NoPermission").'">'.$langs->trans('AddTask').'</a>';
+	}
+
+	print '</div>';
+?>
 		
 		</div>
 		
