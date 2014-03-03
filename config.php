@@ -19,4 +19,5 @@
 	
 	$langs->load("projects");
 	$langs->load('companies');
+	$langs->load('scrumboard@scrumboard');
 	
