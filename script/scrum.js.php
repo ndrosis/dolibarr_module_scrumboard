@@ -56,10 +56,11 @@ function project_refresh_task(id_project, task) {
 	$item.addClass(task.status);
 	
 	var progress= Math.round(task.progress / 5) * 5 ; // round 5
-	$item.find('[rel=progress]').val( progress ).off( "change").on("change", function() {
+	$item.find('[rel=progress]').val( progress ).attr('task-id', task.id).off( "change").on("change", function() {
 			var id_projet = $('#scrum').attr('id_projet');
-		
-			task=project_get_task(id_projet, $(this).parent('li').attr('task-id'));
+			var id_task = $(this).attr('task-id');		
+			
+			task=project_get_task(id_projet, id_task);
 			task.progress = $(this).val();
 			task.status = 'inprogress';
 			project_save_task(id_project, task);
@@ -69,9 +70,9 @@ function project_refresh_task(id_project, task) {
 	$item.find('[rel=label]').html(task.label).attr("title", task.description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});;
 	$item.find('[rel=ref]').html(task.ref).attr("href", '<?=dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
-	$item.find('[rel=time]').html(task.duration_effective).off().on("click", function() {
+	$item.find('[rel=time]').html(task.aff_time).attr('task-id', task.id).off().on("click", function() {
 		
-		pop_time( $('#scrum').attr('id_projet'), $(this).parent('li').attr('task-id'));
+		pop_time( $('#scrum').attr('id_projet'), $(this).attr('task-id'));
 		
 	});
 	
@@ -221,9 +222,9 @@ function create_task(id_projet) {
 	});
 }
 		
-function pop_time(fk_projet, fk_task) {
+function pop_time(id_project, id_task) {
 	$("#saisie")
-				.load('<?=dol_buildpath('/projet/tasks/time.php',2) ?>?id='+fk_task+' div.fiche form'
+				.load('<?=dol_buildpath('/projet/tasks/time.php',2) ?>?id='+id_task+' div.fiche form'
 				,function() {
 					$('textarea[name=timespent_note]').attr('cols',25);
 					
@@ -260,18 +261,21 @@ function pop_time(fk_projet, fk_task) {
 								
 								jEnd = data.indexOf('"error"', jStart) - 10; 
 								message = data.substr(jStart,  jEnd - jStart).replace(/\\'/g,'\'');
-							//	alert(message);
 								$.jnotify(message, "error");
 							}
 							else {
-								$.jnotify('Temps enregistré', "ok");	
+								$.jnotify('<?=$langs->trans('TimeAdded') ?>', "ok");	
 							}
 							
 						});
 						
 						$("#saisie").dialog('close');
-						initTask(fk_projet);
 						
+						
+						task = project_get_task(id_project, id_task);
+						task.status = 'inprogress';
+						project_refresh_task(id_project, task);
+	
 						return false;
 					
 					});
@@ -281,7 +285,7 @@ function pop_time(fk_projet, fk_task) {
 					modal:true
 					,minWidth:800
 					,minHeight:200
-					,title:$('#tasks ul li[fk_task='+fk_task+'] span.label').text()
+					,title:$('li[task-id='+id_task+'] span[rel=label]').text()
 				});
 }
 

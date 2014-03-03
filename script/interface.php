@@ -103,6 +103,8 @@ global $user;
 	
 	$task->status = $values['status'];
 	
+	$task->aff_time = convertSecondToTime($task->duration_effective);
+	
 	$task->update($user);
 	
 	return _as_array($task);
@@ -136,6 +138,8 @@ function _tasks(&$db, $id_project, $status) {
 	while($obj = $db->fetch_object($res)) {
 		$t=new Task($db);
 		$t->fetch($obj->rowid);
+		
+		$t->aff_time = convertSecondToTime($t->duration_effective);
 		
 		$TTask[] = array_merge( _as_array($t) , array('status'=>$status));
 	}

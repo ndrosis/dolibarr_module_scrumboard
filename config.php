@@ -15,6 +15,8 @@
 	dol_include_once('/core/modules/project/modules_project.php');
 	dol_include_once('/core/class/extrafields.class.php');
 	
+	dol_include_once('/core/lib/date.lib.php');
+	
 	$langs->load("projects");
 	$langs->load('companies');
 	
