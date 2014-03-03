@@ -102,7 +102,7 @@
 			<ul>
 			<li id="task-blank">
 				<span rel="progress"></span>
-				<?=img_picto('', 'object_scrumboard@scrumboard') ?> [<a href="#" rel="ref"> </a>] <span rel="label">label</span> 
+				<?=img_picto('', 'object_scrumboard@scrumboard') ?> [<a href="#" rel="ref"> </a>] <span rel="label" class="classfortooltip" title="">label</span> 
 			</li>
 			</ul>
 			

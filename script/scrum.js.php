@@ -56,7 +56,7 @@ function project_refresh_task(id_project, task) {
 	$item.addClass(task.status);
 	
 	$item.find('[rel=progress]').html(task.progress+'%');
-	$item.find('[rel=label]').html(task.label);
+	$item.find('[rel=label]').html(task.label).attr("title", task.description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});;
 	$item.find('[rel=ref]').html(task.ref).attr("href", '<?=dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
 }
