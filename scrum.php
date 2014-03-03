@@ -40,7 +40,7 @@
 
 		<div class="content">
 			
-			<table id="scrum">
+			<table id="scrum" id_projet="<?=$id_projet ?>">
 				<tr>
 					<!-- <td><?=$langs->trans('Ideas'); ?></td></td> -->
 					<td><?=$langs->trans('toDo'); ?>		</td></td>
@@ -101,7 +101,13 @@
 			
 			<ul>
 			<li id="task-blank">
-				<span rel="progress"></span>
+				<select rel="progress">
+					<?php
+					for($i=5; $i<=95;$i+=5) {
+						?><option value="<?=$i ?>"><?=$i ?>%</option><?
+					}
+					?>
+				</select>
 				<?=img_picto('', 'object_scrumboard@scrumboard') ?> [<a href="#" rel="ref"> </a>] <span rel="label" class="classfortooltip" title="">label</span> 
 			</li>
 			</ul>

@@ -55,7 +55,17 @@ function project_refresh_task(id_project, task) {
 	$item.removeClass('idea todo inprogress finish');
 	$item.addClass(task.status);
 	
-	$item.find('[rel=progress]').html(task.progress+'%');
+	var progress= Math.round(task.progress / 5) * 5 ; // round 5
+	$item.find('[rel=progress]').val( progress ).off( "change").on("change", function() {
+			var id_projet = $('#scrum').attr('id_projet');
+		
+			task=project_get_task(id_projet, $(this).parent('li').attr('task-id'));
+			task.progress = $(this).val();
+			task.status = 'inprogress';
+			project_save_task(id_project, task);
+		
+		
+	});
 	$item.find('[rel=label]').html(task.label).attr("title", task.description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});;
 	$item.find('[rel=ref]').html(task.ref).attr("href", '<?=dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
@@ -148,6 +158,7 @@ function project_save_task(id_project, task) {
 			,status : task.status
 			,id_project : id_project
 			,label : task.label
+			,progress : task.progress
 		}
 		,dataType: 'json'
 		,type:'POST'
