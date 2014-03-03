@@ -36,7 +36,7 @@ td.projectDrag {
 	border:1px solid #2AA8B9;
 	border-bottom: 1px solid #194B7E;
 }
-.projectDrag ul li [rel=progress] {
+.projectDrag ul li div.actions {
 	float:right;
 	display:none;
 }
@@ -49,7 +49,7 @@ td.projectDrag {
 .projectDrag ul li.inprogress {
 	background: green;
 }
-.projectDrag ul li.inprogress [rel=progress] {
+.projectDrag ul li.inprogress div.actions {
 	display:block;
 }
 .projectDrag ul .ui-state-highlight {

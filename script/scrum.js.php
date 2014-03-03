@@ -69,6 +69,13 @@ function project_refresh_task(id_project, task) {
 	$item.find('[rel=label]').html(task.label).attr("title", task.description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});;
 	$item.find('[rel=ref]').html(task.ref).attr("href", '<?=dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
+	$item.find('[rel=time]').html(task.duration_effective).off().on("click", function() {
+		
+		pop_time( $('#scrum').attr('id_projet'), $(this).parent('li').attr('task-id'));
+		
+	});
+	
+	
 }
 function project_get_task(id_project, id_task) {
 	var taskReturn="";
@@ -213,3 +220,68 @@ function create_task(id_projet) {
 		
 	});
 }
+		
+function pop_time(fk_projet, fk_task) {
+	$("#saisie")
+				.load('<?=dol_buildpath('/projet/tasks/time.php',2) ?>?id='+fk_task+' div.fiche form'
+				,function() {
+					$('textarea[name=timespent_note]').attr('cols',25);
+					
+					$('#saisie form').submit(function() {
+						
+						$.post( $(this).attr('action')
+							, {
+								token : $(this).find('input[name=token]').val()
+								,action : 'addtimespent'
+								,id : $(this).find('input[name=id]').val()
+								,withproject : 0
+								,time : $(this).find('input[name=time]').val()
+								,timeday : $(this).find('input[name=timeday]').val()
+								,timemonth : $(this).find('input[name=timemonth]').val()
+								,timeyear : $(this).find('input[name=timeyear]').val()
+								
+								,userid : $(this).find('[name=userid]').val()
+								,timespent_note : $(this).find('textarea[name=timespent_note]').val()
+								,timespent_durationmin : $(this).find('[name=timespent_durationmin]').val()
+								,timespent_durationhour : $(this).find('[name=timespent_durationhour]').val()
+								
+								
+								
+							}
+							
+						) .done(function(data) {
+							/*
+							 * Récupération de l'erreur de sauvegarde du temps
+							 */
+							jStart = data.indexOf("$.jnotify(");
+							
+							if(jStart>0) {
+								jStart=jStart+11;
+								
+								jEnd = data.indexOf('"error"', jStart) - 10; 
+								message = data.substr(jStart,  jEnd - jStart).replace(/\\'/g,'\'');
+							//	alert(message);
+								$.jnotify(message, "error");
+							}
+							else {
+								$.jnotify('Temps enregistré', "ok");	
+							}
+							
+						});
+						
+						$("#saisie").dialog('close');
+						initTask(fk_projet);
+						
+						return false;
+					
+					});
+				}
+				)
+				.dialog({
+					modal:true
+					,minWidth:800
+					,minHeight:200
+					,title:$('#tasks ul li[fk_task='+fk_task+'] span.label').text()
+				});
+}
+

@@ -141,6 +141,7 @@
 			
 			<ul>
 			<li id="task-blank">
+				<div class="actions">
 				<select rel="progress">
 					<?php
 					for($i=5; $i<=95;$i+=5) {
@@ -148,11 +149,16 @@
 					}
 					?>
 				</select>
+				<span rel="time"></span>
+				</div>
+				
 				<?=img_picto('', 'object_scrumboard@scrumboard') ?> [<a href="#" rel="ref"> </a>] <span rel="label" class="classfortooltip" title="">label</span> 
 			</li>
 			</ul>
 			
 		</div>
+		
+		<div id="saisie" style="display:none;"></div>
 		
 		<script type="text/javascript">
 			$(document).ready(function() {
