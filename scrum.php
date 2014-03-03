@@ -30,16 +30,56 @@
 
 	$object = new Project($db);
 	$object->fetch($id_projet);
+	if ($object->societe->id > 0)  $result=$object->societe->fetch($object->societe->id);
 
 	$head=project_prepare_head($object);
     dol_fiche_head($head, 'scrumboard', $langs->trans("Scrumboard"),0,($object->public?'projectpub':'project'));
 
-	
+	$form = new Form($db);
+
+	/*
+		 *   Projet synthese pour rappel
+		 */
+		print '<table class="border" width="100%">';
+
+		$linkback = '<a href="'.DOL_URL_ROOT.'/projet/liste.php">'.$langs->trans("BackToList").'</a>';
+
+		// Ref
+		print '<tr><td width="30%">'.$langs->trans('Ref').'</td><td colspan="3">';
+		// Define a complementary filter for search of next/prev ref.
+        if (! $user->rights->projet->all->lire)
+        {
+            $objectsListId = $object->getProjectsAuthorizedForUser($user,$mine,0);
+            $object->next_prev_filter=" rowid in (".(count($objectsListId)?join(',',array_keys($objectsListId)):'0').")";
+        }
+		print $form->showrefnav($object, 'ref', $linkback, 1, 'ref', 'ref', '');
+		print '</td></tr>';
+
+		// Label
+		print '<tr><td>'.$langs->trans("Label").'</td><td>'.$object->title.'</td></tr>';
+
+		// Customer
+		print "<tr><td>".$langs->trans("Company")."</td>";
+		print '<td colspan="3">';
+		if ($object->societe->id > 0) print $object->societe->getNomUrl(1);
+		else print '&nbsp;';
+		print '</td></tr>';
+
+		// Visibility
+		print '<tr><td>'.$langs->trans("Visibility").'</td><td>';
+		if ($object->public) print $langs->trans('SharedProject');
+		else print $langs->trans('PrivateProject');
+		print '</td></tr>';
+
+		// Statut
+		print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'</td></tr>';
+
+		print "</table>";
 ?>
 <link rel="stylesheet" type="text/css" title="default" href="<?=dol_buildpath('/scrumboard/css/scrum.css',1) ?>">
 
 		<div class="content">
-			
+	
 			<table id="scrum" id_projet="<?=$id_projet ?>">
 				<tr>
 					<!-- <td><?=$langs->trans('Ideas'); ?></td></td> -->
