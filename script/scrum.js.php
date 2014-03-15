@@ -68,7 +68,7 @@ function project_refresh_task(id_project, task) {
 		
 	});
 	$item.find('[rel=label]').html(task.label).attr("title", task.description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});;
-	$item.find('[rel=ref]').html(task.ref).attr("href", '<?=dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
+	$item.find('[rel=ref]').html(task.ref).attr("href", '<? print dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
 	$item.find('[rel=time]').html(task.aff_time).attr('task-id', task.id).off().on("click", function() {
 		
@@ -195,7 +195,7 @@ function create_task(id_projet) {
 	if($('#dialog-create-task').length==0) {
 		$('body').append('<div id="dialog-create-task"></div>');
 	}
-	var url ="<?= dol_buildpath('/projet/tasks.php?action=create&id=',1) ?>"+id_projet
+	var url ="<? print  dol_buildpath('/projet/tasks.php?action=create&id=',1) ?>"+id_projet
 		
 	$('#dialog-create-task').load(url+" div.fiche form",function() {
 		
@@ -214,7 +214,7 @@ function create_task(id_projet) {
 		});
 		
 		$(this).dialog({
-			title: "<?=$langs->trans('AddTask') ?>"
+			title: "<? print $langs->trans('AddTask') ?>"
 			,width:800
 			,modal:true
 		});
@@ -224,7 +224,7 @@ function create_task(id_projet) {
 		
 function pop_time(id_project, id_task) {
 	$("#saisie")
-				.load('<?=dol_buildpath('/projet/tasks/time.php',2) ?>?id='+id_task+' div.fiche form'
+				.load('<? print dol_buildpath('/projet/tasks/time.php',2) ?>?id='+id_task+' div.fiche form'
 				,function() {
 					$('textarea[name=timespent_note]').attr('cols',25);
 					
@@ -264,7 +264,7 @@ function pop_time(id_project, id_task) {
 								$.jnotify(message, "error");
 							}
 							else {
-								$.jnotify('<?=$langs->trans('TimeAdded') ?>', "ok");	
+								$.jnotify('<? print $langs->trans('TimeAdded') ?>', "ok");	
 							}
 							
 						});

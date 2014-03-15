@@ -76,16 +76,16 @@
 
 		print "</table>";
 ?>
-<link rel="stylesheet" type="text/css" title="default" href="<?=dol_buildpath('/scrumboard/css/scrum.css',1) ?>">
+<link rel="stylesheet" type="text/css" title="default" href="<? print dol_buildpath('/scrumboard/css/scrum.css',1) ?>">
 
 		<div class="content">
 	
-			<table id="scrum" id_projet="<?=$id_projet ?>">
+			<table id="scrum" id_projet="<? print $id_projet ?>">
 				<tr>
-					<!-- <td><?=$langs->trans('Ideas'); ?></td></td> -->
-					<td><?=$langs->trans('toDo'); ?>		</td></td>
-					<td><?=$langs->trans('inProgress'); ?></td></td>
-					<td><?=$langs->trans('finish'); ?></td></td>
+					<!-- <td><? print $langs->trans('Ideas'); ?></td></td> -->
+					<td><? print $langs->trans('toDo'); ?>		</td></td>
+					<td><? print $langs->trans('inProgress'); ?></td></td>
+					<td><? print $langs->trans('finish'); ?></td></td>
 				</tr>
 				<tr>
 					<!-- <td class="projectDrag droppable" id="task-idea" rel="idea">
@@ -145,14 +145,14 @@
 				<select rel="progress">
 					<?php
 					for($i=5; $i<=95;$i+=5) {
-						?><option value="<?=$i ?>"><?=$i ?>%</option><?
+						?><option value="<? print $i ?>"><? print $i ?>%</option><?
 					}
 					?>
 				</select>
 				<span rel="time"></span>
 				</div>
 				
-				<?=img_picto('', 'object_scrumboard@scrumboard') ?> [<a href="#" rel="ref"> </a>] <span rel="label" class="classfortooltip" title="">label</span> 
+				<? print img_picto('', 'object_scrumboard@scrumboard') ?> [<a href="#" rel="ref"> </a>] <span rel="label" class="classfortooltip" title="">label</span> 
 			</li>
 			</ul>
 			
@@ -162,8 +162,8 @@
 		
 		<script type="text/javascript">
 			$(document).ready(function() {
-				loadTasks(<?=$id_projet ?>);
-				project_init_change_type(<?=$id_projet ?>);
+				loadTasks(<? print $id_projet ?>);
+				project_init_change_type(<? print $id_projet ?>);
 			});
 		</script>
 		
