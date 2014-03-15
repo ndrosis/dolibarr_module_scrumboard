@@ -77,3 +77,7 @@ td.projectDrag {
 	color:#fff;
 }
 
+
+div.bodyline {
+	z-index:1050;
+}
