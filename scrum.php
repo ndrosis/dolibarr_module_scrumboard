@@ -145,7 +145,7 @@
 				<select rel="progress">
 					<?php
 					for($i=5; $i<=95;$i+=5) {
-						?><option value="<?php echo $i ?>"><?php echo $i ?>%</option><?
+						?><option value="<?php echo $i ?>"><?php echo $i ?>%</option><?php
 					}
 					?>
 				</select>
@@ -167,6 +167,6 @@
 			});
 		</script>
 		
-<?
+<?php
 
 	llxFooter();
