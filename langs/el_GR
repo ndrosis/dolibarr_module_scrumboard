@@ -1,7 +1,7 @@
-Module104210Name = Όνομα
-Module104210Desc = Περιγραφή
+Module104210Name = Scrumboard
+Module104210Desc = Περιλαμβάνονται χαρακτηριστικά για να ενημερώσετε το ποσοστό εργασίας και τους χρόνους.
 Ideas = Ιδέες
 inProgress = Σε εξέλιξη
 toDo = Για να γίνει
 finish = Ολοκληρωμένες
-TimeAdded= Προσθήκη χρόνου
+TimeAdded = Προσθήκη χρόνου
