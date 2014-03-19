@@ -1,7 +1,7 @@
-ModuleXXXXXXName = Name
-ModuleXXXXXXDesc = Descripion
+Module104210Name = Scrumboard
+Module104210Desc = Adding a tab to a project card for managing tasks via a scrum board.
 Ideas = Ideas
 inProgress = In progress
 toDo = To do
 finish = Finish
-TimeAdded=Time Added
+TimeAdded = Time Added
