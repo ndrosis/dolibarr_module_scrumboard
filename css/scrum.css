@@ -36,6 +36,17 @@ td.projectDrag {
 	border:1px solid #2AA8B9;
 	border-bottom: 1px solid #194B7E;
 }
+.projectDrag ul li div.progressbar {
+	position:absolute;
+	background: #ccc;
+	height:10px;
+	-moz-opacity : .5;
+	opacity:.5;
+	
+	bottom:0;
+	left:0;
+}
+
 .projectDrag ul li div.actions {
 	float:right;
 	display:none;
@@ -52,6 +63,16 @@ td.projectDrag {
 .projectDrag ul li.inprogress div.actions {
 	display:block;
 }
+
+.projectDrag ul li.inprogress div.actions select.progress {
+	display:inline-block;
+}
+.projectDrag ul li.inprogress div.actions span[rel=time] {
+	font-size:12px;
+	display:inline-block;
+}
+
+
 .projectDrag ul .ui-state-highlight {
 	background: #fff;
 	height:30px;

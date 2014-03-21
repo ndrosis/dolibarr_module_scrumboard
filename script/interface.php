@@ -28,6 +28,14 @@ function _get(&$db, $case) {
 }
 function _as_array(&$object, $recursif=false) {
 	$Tab=array();
+	
+		if(get_class($object)=='Task') {
+			
+			$object->aff_time = convertSecondToTime($object->duration_effective);
+			$object->aff_planned_workload = convertSecondToTime($object->planned_workload);
+				
+		}
+	
 		foreach ($object as $key => $value) {
 				
 			if(is_object($value) || is_array($value)) {
@@ -103,8 +111,6 @@ global $user;
 	
 	$task->status = $values['status'];
 	
-	$task->aff_time = convertSecondToTime($task->duration_effective);
-	
 	$task->update($user);
 	
 	return _as_array($task);
@@ -138,8 +144,6 @@ function _tasks(&$db, $id_project, $status) {
 	while($obj = $db->fetch_object($res)) {
 		$t=new Task($db);
 		$t->fetch($obj->rowid);
-		
-		$t->aff_time = convertSecondToTime($t->duration_effective);
 		
 		$TTask[] = array_merge( _as_array($t) , array('status'=>$status));
 	}
