@@ -84,6 +84,7 @@ function project_refresh_task(id_project, task) {
 		$item.find('div.progressbar').css('width', percent_progress+'%');	
 	}
 
+	$item.find('div.progressbaruser').css('width', progress+'%');	
 		
 	
 }

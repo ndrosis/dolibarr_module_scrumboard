@@ -36,15 +36,18 @@ td.projectDrag {
 	border:1px solid #2AA8B9;
 	border-bottom: 1px solid #194B7E;
 }
-.projectDrag ul li div.progressbar {
+.projectDrag ul li div.progressbar, .projectDrag ul li div.progressbaruser {
 	position:absolute;
-	background: #ccc;
-	height:10px;
+	background: #000;
+	height:5px;
 	-moz-opacity : .5;
 	opacity:.5;
 	
 	bottom:0;
 	left:0;
+}
+.projectDrag ul li div.progressbaruser {
+	background: #ccc;
 }
 
 .projectDrag ul li div.actions {

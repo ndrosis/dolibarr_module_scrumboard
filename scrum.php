@@ -141,6 +141,7 @@
 			
 			<ul>
 			<li id="task-blank">
+				<div class="progressbaruser"></div>
 				<div class="progressbar"></div>
 				<div class="actions">
 				<select rel="progress">
