@@ -5,3 +5,5 @@ inProgress = En cours
 toDo = A faire
 finish = Terminées
 TimeAdded=Temps ajouté
+CurrentVelocity=Vélocité actuelle
+HoursPerDay=h par jour

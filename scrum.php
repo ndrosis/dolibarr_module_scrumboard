@@ -73,6 +73,9 @@
 
 		// Statut
 		print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'</td></tr>';
+	
+		// Statut
+		print '<tr><td>'.$langs->trans("CurrentVelocity").'</td><td>'.convertSecondToTime(scrum_getVelocity($object)).$langs->trans('HoursPerDay').'</td></tr>';
 
 		print "</table>";
 ?>
@@ -159,6 +162,7 @@
 			</ul>
 			
 		</div>
+		
 		
 		<div id="saisie" style="display:none;"></div>
 		

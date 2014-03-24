@@ -17,6 +17,9 @@
 	
 	dol_include_once('/core/lib/date.lib.php');
 	
+	dol_include_once('/scrumboard/lib/scrumboard.lib.php');
+	
+	
 	$langs->load("projects");
 	$langs->load('companies');
 	$langs->load('scrumboard@scrumboard');

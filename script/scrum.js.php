@@ -79,10 +79,22 @@ function project_refresh_task(id_project, task) {
 		$item.find('div.progressbar').css('background-color', 'red');
 		$item.find('div.progressbar').css('width', '100%');
 		$item.find('div.progressbar').css('opacity', '1');
+		$item.find('div.progressbaruser').css('height', '7px');	
+	
 	}
+	else if(percent_progress > progress) {
+		$item.find('div.progressbar').css('background-color', 'orange');
+		$item.find('div.progressbar').css('width', percent_progress+'%');
+		$item.find('div.progressbar').css('opacity', '1');
+		$item.find('div.progressbaruser').css('height', '7px');	
+
+	}
+	
 	else {
 		$item.find('div.progressbar').css('width', percent_progress+'%');	
+	
 	}
+	
 
 	$item.find('div.progressbaruser').css('width', progress+'%');	
 		
