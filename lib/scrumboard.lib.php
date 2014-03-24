@@ -54,14 +54,13 @@ function scrumboardAdminPrepareHead()
     return $head;
 }
 
-function scrum_getVelocity(&$object) {
-	global $db;
+function scrum_getVelocity(&$db, $id_project) {
 	
 	$t2week= strtotime('-2weeks');
 	
 	$res=$db->query("SELECT SUM(tt.task_duration) as task_duration 
 	FROM ".MAIN_DB_PREFIX."projet_task_time tt LEFT JOIN ".MAIN_DB_PREFIX."projet_task t ON (tt.fk_task=t.rowid)
-	WHERE tt.task_date>='".date('Y-m-d', $t2week)."' AND t.fk_projet=".$object->id);
+	WHERE tt.task_date>='".date('Y-m-d', $t2week)."' AND t.fk_projet=".$id_project);
 	
 	if($obj=$db->fetch_object($res)) return round($obj->task_duration / 14);
 	else return 0;

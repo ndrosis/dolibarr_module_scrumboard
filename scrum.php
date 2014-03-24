@@ -75,7 +75,7 @@
 		print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'</td></tr>';
 	
 		// Statut
-		print '<tr><td>'.$langs->trans("CurrentVelocity").'</td><td>'.convertSecondToTime(scrum_getVelocity($object)).$langs->trans('HoursPerDay').'</td></tr>';
+		print '<tr><td>'.$langs->trans("CurrentVelocity").'</td><td rel="currentVelocity"></td></tr>';
 
 		print "</table>";
 ?>
@@ -86,8 +86,8 @@
 			<table id="scrum" id_projet="<?php echo $id_projet ?>">
 				<tr>
 					<!-- <td><?php echo $langs->trans('Ideas'); ?></td></td> -->
-					<td><?php echo $langs->trans('toDo'); ?>		</td></td>
-					<td><?php echo $langs->trans('inProgress'); ?></td></td>
+					<td><?php echo $langs->trans('toDo'); ?><span rel="velocityToDo"></span></td></td>
+					<td><?php echo $langs->trans('inProgress'); ?><span rel="velocityInProgress"></span></td></td>
 					<td><?php echo $langs->trans('finish'); ?></td></td>
 				</tr>
 				<tr>
@@ -170,6 +170,7 @@
 			$(document).ready(function() {
 				loadTasks(<?php echo $id_projet ?>);
 				project_init_change_type(<?php echo $id_projet ?>);
+				velocity(<?php echo $id_projet ?>);
 			});
 		</script>
 		

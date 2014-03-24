@@ -6,4 +6,5 @@ toDo = A faire
 finish = Terminées
 TimeAdded=Temps ajouté
 CurrentVelocity=Vélocité actuelle
-HoursPerDay=h par jour
+HoursPerDay=h par jour (sert de base de calcul aux dates de fin)
+EndedThe=terminée(s) probablement le

@@ -1,6 +1,33 @@
 <?php
 	require('../config.php');
 ?>
+function velocity(id_project) {
+	$.ajax({
+		url : "./script/interface.php"
+		,data: {
+			json:1
+			,get : 'velocity'
+			,id_project : id_project
+			,async:true
+		}
+		,dataType: 'json'
+	})
+	.done(function (data) {
+		
+		if(data.current) {
+			$('td[rel=currentVelocity]').html(data.current);
+		}
+		if(data.inprogress) {
+			$('span[rel=velocityInProgress]').html(data.inprogress);
+		}
+		if(data.todo) {
+			$('span[rel=velocityToDo]').html(data.todo);
+		}
+				
+	}); 
+	
+	
+}
 function project_get_tasks(id_project, liste, status) {
 	$('#'+liste).empty();
 	
@@ -268,8 +295,6 @@ function pop_time(id_project, id_task) {
 								,timespent_durationmin : $(this).find('[name=timespent_durationmin]').val()
 								,timespent_durationhour : $(this).find('[name=timespent_durationhour]').val()
 								
-								
-								
 							}
 							
 						) .done(function(data) {
@@ -286,7 +311,8 @@ function pop_time(id_project, id_task) {
 								$.jnotify(message, "error");
 							}
 							else {
-								$.jnotify('<?php echo $langs->trans('TimeAdded') ?>', "ok");	
+								$.jnotify('<?php echo $langs->trans('TimeAdded') ?>', "ok");
+								velocity(id_project);	
 							}
 							
 						});

@@ -23,9 +23,57 @@ function _get(&$db, $case) {
 			print json_encode(_as_array($task));
 
 			break;
+			
+		case 'velocity':
+			
+			print json_encode(_velocity($db, (int)$_REQUEST['id_project']));
+			
+			break;
 	}
 
 }
+
+function _velocity(&$db, $id_project) {
+global $langs;
+	
+	$Tab=array();
+	
+	$velocity = scrum_getVelocity($db, $id_project);
+	$Tab['current'] = convertSecondToTime($velocity).$langs->trans('HoursPerDay');
+	
+	if( (float)DOL_VERSION <= 3.4 ) {
+		// ne peut pas gérér la résolution car pas de temps plannifié			
+	}
+	else {
+		
+		$time = time();
+		$res=$db->query("SELECT SUM(planned_workload-duration_effective) as duration 
+			FROM ".MAIN_DB_PREFIX."projet_task 
+			WHERE fk_projet=".$id_project." AND progress>0 AND progress<100");
+		if($obj=$db->fetch_object($res)) {
+			//time rest in second
+			$time_end_inprogress = $time + $obj->duration / $velocity * 86400;
+		}
+		
+		$res=$db->query("SELECT SUM(planned_workload-duration_effective) as duration 
+			FROM ".MAIN_DB_PREFIX."projet_task 
+			WHERE fk_projet=".$id_project." AND progress=0");
+		if($obj=$db->fetch_object($res)) {
+			//time rest in second
+			$time_end_todo = $time_end_inprogress + $obj->duration / $velocity * 86400;
+		}
+		
+		$Tab['todo']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_todo);
+		$Tab['inprogress']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_inprogress);
+		
+		
+		
+	}
+	
+	return $Tab;
+	
+}
+
 function _as_array(&$object, $recursif=false) {
 	$Tab=array();
 	
