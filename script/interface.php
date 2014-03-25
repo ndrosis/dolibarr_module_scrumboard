@@ -46,25 +46,34 @@ global $langs;
 	}
 	else {
 		
-		$time = time();
-		$res=$db->query("SELECT SUM(planned_workload-duration_effective) as duration 
-			FROM ".MAIN_DB_PREFIX."projet_task 
-			WHERE fk_projet=".$id_project." AND progress>0 AND progress<100");
-		if($obj=$db->fetch_object($res)) {
-			//time rest in second
-			$time_end_inprogress = $time + $obj->duration / $velocity * 86400;
+		if($velocity>0) {
+			
+			$time = time();
+			$res=$db->query("SELECT SUM(planned_workload-duration_effective) as duration 
+				FROM ".MAIN_DB_PREFIX."projet_task 
+				WHERE fk_projet=".$id_project." AND progress>0 AND progress<100");
+			if($obj=$db->fetch_object($res)) {
+				//time rest in second
+				$time_end_inprogress = $time + $obj->duration / $velocity * 86400;
+			}
+			
+			if($time_end_inprogress<$time)$time_end_inprogress = $time;
+			
+			$res=$db->query("SELECT SUM(planned_workload-duration_effective) as duration 
+				FROM ".MAIN_DB_PREFIX."projet_task 
+				WHERE fk_projet=".$id_project." AND progress=0");
+			if($obj=$db->fetch_object($res)) {
+				//time rest in second
+				$time_end_todo = $time_end_inprogress + $obj->duration / $velocity * 86400;
+			}
+			
+			if($time_end_todo<$time)$time_end_todo = $time;
+			
+			if($time_end_todo>$time_end_inprogress) $Tab['todo']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_todo);
+			$Tab['inprogress']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_inprogress);
+			
+			
 		}
-		
-		$res=$db->query("SELECT SUM(planned_workload-duration_effective) as duration 
-			FROM ".MAIN_DB_PREFIX."projet_task 
-			WHERE fk_projet=".$id_project." AND progress=0");
-		if($obj=$db->fetch_object($res)) {
-			//time rest in second
-			$time_end_todo = $time_end_inprogress + $obj->duration / $velocity * 86400;
-		}
-		
-		$Tab['todo']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_todo);
-		$Tab['inprogress']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_inprogress);
 		
 		
 		

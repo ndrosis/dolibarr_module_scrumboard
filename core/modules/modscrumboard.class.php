@@ -438,6 +438,10 @@ class modscrumboard extends DolibarrModules
 
         $result = $this->loadTables();
 
+		dolibarr_set_const($this->db, 'SCRUM_DEFAULT_VELOCITY', 7,'chaine',1,'Vélocité par défaut d\'un projet',0);
+	
+
+
         return $this->_init($sql, $options);
     }
 
