@@ -91,6 +91,8 @@ function _as_array(&$object, $recursif=false) {
 				else $Tab[$key] = $value;
 			}
 			else if(strpos($key,'date_')===0){
+				$Tab['time_'.$key] = $Tab[$key];	
+				
 				if(empty($value))$Tab[$key] = '0000-00-00 00:00:00';
 				else $Tab[$key] = date('Y-m-d H:i:s',$value);
 			}
@@ -158,6 +160,8 @@ global $user;
 	}	
 	
 	$task->status = $values['status'];
+	
+	//$task->velocity_ok = _is_current_velocity_ok($task);
 	
 	$task->update($user);
 	

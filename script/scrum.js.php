@@ -116,7 +116,6 @@ function project_refresh_task(id_project, task) {
 		$item.find('div.progressbaruser').css('height', '7px');	
 
 	}
-	
 	else {
 		$item.find('div.progressbar').css('width', percent_progress+'%');	
 	
@@ -124,8 +123,13 @@ function project_refresh_task(id_project, task) {
 	
 
 	$item.find('div.progressbaruser').css('width', progress+'%');	
-		
 	
+/*	
+	var t = new Date().getTime();
+	if(task.time_date_end>0 && task.time_date_end<t) {
+		$item.css('background-color','red');
+	}	
+	*/
 }
 function project_get_task(id_project, id_task) {
 	var taskReturn="";
