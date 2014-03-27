@@ -55,14 +55,25 @@ function scrumboardAdminPrepareHead()
 }
 
 function scrum_getVelocity(&$db, $id_project) {
+	global $conf;
 	
 	$t2week= strtotime('-2weeks');
+	
+	$projet=new Project($db);
+	$projet->fetch($id_project);
+	
+	if($projet->date_start>$t2week) $t2week = $projet->date_start;
 	
 	$res=$db->query("SELECT SUM(tt.task_duration) as task_duration 
 	FROM ".MAIN_DB_PREFIX."projet_task_time tt LEFT JOIN ".MAIN_DB_PREFIX."projet_task t ON (tt.fk_task=t.rowid)
 	WHERE tt.task_date>='".date('Y-m-d', $t2week)."' AND t.fk_projet=".$id_project);
 	
-	if($obj=$db->fetch_object($res)) return round($obj->task_duration / 14);
-	else return 0;
+	$velocity = 0;
+	if($obj=$db->fetch_object($res)) {
+		 $velocity = round($obj->task_duration / ((time() - $t2week) / 86400));
+	}
 	
+	if($velocity==0)$velocity = (int)$conf->global->SCRUM_DEFAULT_VELOCITY * 3600;
+
+	return $velocity;	
 }
