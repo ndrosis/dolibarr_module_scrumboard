@@ -103,7 +103,7 @@ function project_refresh_task(id_project, task) {
 
 	var percent_progress = Math.round(task.duration_effective / task.planned_workload * 100);
 	if(percent_progress > 100) {
-		$item.find('div.progressbar').css('background-color', 'red');
+		$item.find('div.progressbar').css('background-color', '#dd0000');
 		$item.find('div.progressbar').css('width', '100%');
 		$item.find('div.progressbar').css('opacity', '1');
 		$item.find('div.progressbaruser').css('height', '7px');	
@@ -124,15 +124,19 @@ function project_refresh_task(id_project, task) {
 
 	$item.find('div.progressbaruser').css('width', progress+'%');	
 	
+	if(progress<100) {
+		
+		var t = new Date().getTime() /1000;
+		
+		if(task.time_date_end>0 && task.time_date_end<t) {
+			$item.css('background-color','red');
+		}	
+		else if(task.time_date_delivery>0 && task.time_date_delivery>task.time_date_end) {
+			$item.css('background-color','orange');
+		}	
+		
+	}
 
-	var t = new Date().getTime() /1000;
-	
-	if(task.time_date_end>0 && task.time_date_end<t) {
-		$item.css('background-color','red');
-	}	
-	else if(task.time_date_delivery>0 && task.time_date_delivery>task.time_date_end) {
-		$item.css('background-color','orange');
-	}	
 	
 }
 function project_get_task(id_project, id_task) {

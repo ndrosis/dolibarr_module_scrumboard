@@ -119,6 +119,19 @@
 	*/
 	print '<div class="tabsAction">';
 
+	if( (float)DOL_VERSION > 3.4 ) {
+		
+	if ($user->rights->projet->all->creer || $user->rights->projet->creer)
+	{
+		if ($object->public || $object->restrictedProjectArea($user,'write') > 0)
+		{
+			print '<a class="butAction" href="javascript:reset_date_task('.$object->id.');">'.$langs->trans('ResetDateTask').'</a>';
+		}
+	}
+		
+		
+	}
+
 	if ($user->rights->projet->all->creer || $user->rights->projet->creer)
 	{
 		if ($object->public || $object->restrictedProjectArea($user,'write') > 0)

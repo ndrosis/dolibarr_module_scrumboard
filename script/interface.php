@@ -193,15 +193,22 @@ global $user, $langs;
 
 function _get_delivery_date_with_velocity(&$db, &$task, $velocity, $time=null) {
 	
-	$rest = $task->planned_workload - $task->duration_effective; // nombre de seconde restante
+	if( (float)DOL_VERSION <= 3.4 ) {
+		return 0;	
 	
-	if(is_null($time)) $time = time();
-	if($time<$task->start_date)$time = $task->start_date;
+	}
+	else {
+		$rest = $task->planned_workload - $task->duration_effective; // nombre de seconde restante
+		
+		if(is_null($time)) $time = time();
+		if($time<$task->start_date)$time = $task->start_date;
+		
+		
+		$time += ( 86400 * $rest / $velocity  )  ;
 	
-	
-	$time += ( 86400 * $rest / $velocity  )  ;
-
-	return $time;
+		return $time;
+		
+	}
 }	
 
 function _tasks(&$db, $id_project, $status) {
