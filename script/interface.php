@@ -30,12 +30,36 @@ function _get(&$db, $case) {
 
 }
 
+function _put(&$db, $case) {
+	switch ($case) {
+		case 'task' :
+			
+			print json_encode(_task($db, (int)GETPOST('id'), $_REQUEST));
+			
+			break;
+			
+		case 'sort-task' :
+			
+			_sort_task($db, $_REQUEST['TTaskID']);
+			
+			break;
+		case 'reset-date-task':
+			
+			_reset_date_task($db,(int)GETPOST('id_project'), (float)GETPOST('velocity') * 3600);
+			
+			break;
+
+	}
+
+}
+
 function _velocity(&$db, $id_project) {
 global $langs;
 	
 	$Tab=array();
 	
 	$velocity = scrum_getVelocity($db, $id_project);
+	$Tab['velocity'] = $velocity;
 	$Tab['current'] = convertSecondToTime($velocity).$langs->trans('HoursPerDay');
 	
 	if( (float)DOL_VERSION <= 3.4 ) {
@@ -105,22 +129,6 @@ global $langs;
 	
 }
 
-function _put(&$db, $case) {
-	switch ($case) {
-		case 'task' :
-			
-			print json_encode(_task($db, (int)GETPOST('id'), $_REQUEST));
-			
-			break;
-			
-		case 'sort-task' :
-			
-			_sort_task($db, $_REQUEST['TTaskID']);
-			
-			break;
-	}
-
-}
 function _sort_task(&$db, $TTask) {
 	
 	foreach($TTask as $rank=>$id) {
@@ -193,16 +201,17 @@ global $user, $langs;
 
 function _get_delivery_date_with_velocity(&$db, &$task, $velocity, $time=null) {
 	
-	if( (float)DOL_VERSION <= 3.4 ) {
+	if( (float)DOL_VERSION <= 3.4 || $velocity==0) {
 		return 0;	
 	
 	}
 	else {
 		$rest = $task->planned_workload - $task->duration_effective; // nombre de seconde restante
 		
-		if(is_null($time)) $time = time();
-		if($time<$task->start_date)$time = $task->start_date;
-		
+		if(is_null($time)) {
+			$time = time();
+			if($time<$task->start_date)$time = $task->start_date;
+		}
 		
 		$time += ( 86400 * $rest / $velocity  )  ;
 	
@@ -211,24 +220,55 @@ function _get_delivery_date_with_velocity(&$db, &$task, $velocity, $time=null) {
 	}
 }	
 
+function _reset_date_task(&$db, $id_project, $velocity) {
+global $user;
+
+	if($velocity==0) return false;
+
+	$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
+	WHERE fk_projet=".$id_project." AND progress<100
+	ORDER BY rang";
+
+	$res = $db->query($sql);	
+	
+	$current_time = time();
+	
+	while($obj = $db->fetch_object($res)) {
+		
+		$task=new Task($db);
+		$task->fetch($obj->rowid);
+		
+		if($task->progress==0)$task->date_start = $current_time;
+		
+		$task->date_end = _get_delivery_date_with_velocity($db, $task, $velocity, $current_time);
+		
+		$current_time = $task->date_end;
+		
+		$task->update($user);
+		
+	}
+
+
+}
+
 function _tasks(&$db, $id_project, $status) {
 		
 	if($status=='ideas') {
 		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
-		WHERE fk_projet=$id_project AND progress=0 AND datee IS NULL
+		WHERE fk_projet=".$id_project." AND progress=0 AND datee IS NULL
 		ORDER BY rang";
 	}	
 	else if($status=='todo') {
 		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
-		WHERE fk_projet=$id_project AND progress=0 ORDER BY rang";
+		WHERE fk_projet=".$id_project." AND progress=0 ORDER BY rang";
 	}
 	else if($status=='inprogress') {
 		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
-		WHERE fk_projet=$id_project AND progress>0 AND progress<100 ORDER BY rang";
+		WHERE fk_projet=".$id_project." AND progress>0 AND progress<100 ORDER BY rang";
 	}
 	else if($status=='finish') {
 		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
-		WHERE fk_projet=$id_project AND progress=100 
+		WHERE fk_projet=".$id_project." AND progress=100 
 		ORDER BY rang";
 	}
 		

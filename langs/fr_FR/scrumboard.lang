@@ -12,3 +12,6 @@ TaskWontfinishInTime=Cette tâche n'a pas été livrée à la date prévue
 TaskMightNotfinishInTime=Cette tâche ne sera peut-être pas livrée en temps voulue
 TaskDateShouldDelivery=Date de livraison probable si elle débute à la date prévue
 BarProgressionHelp=2 barres de progression sont visibles dans chaque tâche. La plus pâle est celle saisie dans le % de progression de la tâche. La deuxième est celle calculée à partir des temps utilisateur.
+ResetDateWithThisVelocity=Recalculer les dates de fin des tâches en cours ou futures à partir de la vélocité ci-après
+ResetDate=Recalculer les dates ?
+ResetDateTask=Recalculer les dates des tâches

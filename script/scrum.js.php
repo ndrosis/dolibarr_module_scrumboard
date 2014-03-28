@@ -1,7 +1,7 @@
 <?php
 	require('../config.php');
 ?>
-function velocity(id_project) {
+function project_velocity(id_project) {
 	$.ajax({
 		url : "./script/interface.php"
 		,data: {
@@ -22,6 +22,9 @@ function velocity(id_project) {
 		}
 		if(data.todo) {
 			$('span[rel=velocityToDo]').html(data.todo);
+		}
+		if(data.velocity) {
+			$('#current-velocity').val(Math.round(data.velocity / 3600 * 100) / 100);
 		}
 				
 	}); 
@@ -232,7 +235,7 @@ function project_save_task(id_project, task) {
 	})
 	.done(function (task) {
 		project_refresh_task(id_project, task);
-		velocity(id_project);				
+		project_velocity(id_project);				
 		$('#task-'+task.id).css({ opacity:1 });
 	}); 
 	
@@ -240,7 +243,7 @@ function project_save_task(id_project, task) {
 function project_develop_task(id_task) {
 	$('#task-'+id_task+' div.view').toggle();
 }
-function loadTasks(id_projet) {
+function project_loadTasks(id_projet) {
 	
 					/*project_get_tasks(id_projet, 'list-task-idea', 'idea');*/
 				project_get_tasks(id_projet , 'list-task-todo', 'todo');
@@ -263,7 +266,7 @@ function create_task(id_projet) {
 		$('#dialog-create-task form').submit(function() {
 			
 			$.post($(this).attr('action'), $(this).serialize(), function() {
-				loadTasks(id_projet);
+				project_loadTasks(id_projet);
 			});
 		
 			$('#dialog-create-task').dialog('close');			
@@ -323,7 +326,7 @@ function pop_time(id_project, id_task) {
 							}
 							else {
 								$.jnotify('<?php echo $langs->trans('TimeAdded') ?>', "ok");
-								velocity(id_project);	
+								project_velocity(id_project);	
 							}
 							
 						});
@@ -346,5 +349,39 @@ function pop_time(id_project, id_task) {
 					,minHeight:200
 					,title:$('li[task-id='+id_task+'] span[rel=label]').text()
 				});
+}
+
+function reset_the_dates(id_project) {
+	
+	var velocity = parseFloat($('#current-velocity').val());
+	$.ajax({
+		url : "./script/interface.php"
+		,data: {
+			json:1
+			,put : 'reset-date-task'
+			,id_project : id_project
+			,velocity : velocity
+		}
+		,dataType: 'json'
+		,type:'POST'
+		,async:false
+	})
+	.done(function (task) {
+		project_loadTasks(id_project);
+		project_velocity(id_project);				
+	}); 
+	
+}
+
+function reset_date_task(id_project) {
+	$("#reset-date").dialog({
+			modal:true
+			,minWidth:400
+			,minHeight:200
+			,buttons: [ 
+				{ text: "<?php echo $langs->trans('Yes'); ?>", click: function() { reset_the_dates(id_project); $( this ).dialog( "close" ); } } 
+				, { text: "<?php echo $langs->trans('No'); ?>", click: function() { $( this ).dialog( "close" ); } }
+			] 
+	});
 }
 

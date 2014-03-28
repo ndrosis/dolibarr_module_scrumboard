@@ -186,12 +186,19 @@
 		
 		
 		<div id="saisie" style="display:none;"></div>
+		<div id="reset-date" title="<?php echo $langs->trans('ResetDate'); ?>" style="display:none;">
+			
+			<p><?php echo $langs->trans('ResetDateWithThisVelocity'); ?> : </p>
+			
+			<input type="text" name="velocity" size="5" id="current-velocity" value"<?php echo $conf->global->SCRUM_DEFAULT_VELOCITY*3600; ?>" /> <?php echo $langs->trans('HoursPerDay') ?>
+			
+		</div>
 		
 		<script type="text/javascript">
 			$(document).ready(function() {
-				loadTasks(<?php echo $id_projet ?>);
+				project_loadTasks(<?php echo $id_projet ?>);
 				project_init_change_type(<?php echo $id_projet ?>);
-				velocity(<?php echo $id_projet ?>);
+				project_velocity(<?php echo $id_projet ?>);
 			});
 		</script>
 		
