@@ -8,3 +8,5 @@ TimeAdded=Temps ajouté
 CurrentVelocity=Vélocité actuelle
 HoursPerDay=h par jour (sert de base de calcul aux dates de fin)
 EndedThe=terminée(s) probablement le
+TaskWontfinishInTime=Cette tâche n'a pas été livrée à la date prévue
+TaskMightNotfinishInTime=Cette tâche ne sera peut-être pas livrée en temps voulue

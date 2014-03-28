@@ -8,3 +8,5 @@ TimeAdded=Time Added
 CurrentVelocity=Current Velocity
 HoursPerDay=H per day
 EndedThe=Ended the
+TaskWontfinishInTime=This task is not delivered on the due date
+TaskMightNotfinishInTime=This task may be not delivered on schedule

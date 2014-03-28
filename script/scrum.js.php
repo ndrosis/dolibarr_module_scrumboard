@@ -86,15 +86,15 @@ function project_refresh_task(id_project, task) {
 	$item.find('[rel=progress]').val( progress ).attr('task-id', task.id).off( "change").on("change", function() {
 			var id_projet = $('#scrum').attr('id_projet');
 			var id_task = $(this).attr('task-id');		
-			
 			task=project_get_task(id_projet, id_task);
-			task.progress = $(this).val();
+			task.progress = parseInt($(this).val());
 			task.status = 'inprogress';
+			
 			project_save_task(id_project, task);
 		
 		
 	});
-	$item.find('[rel=label]').html(task.label).attr("title", task.description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});;
+	$item.find('[rel=label]').html(task.label).attr("title", task.long_description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});
 	$item.find('[rel=ref]').html(task.ref).attr("href", '<?php echo dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
 	$item.find('[rel=time]').html(task.aff_time + '<br />' + task.aff_planned_workload).attr('task-id', task.id).off().on("click", function() {
@@ -124,12 +124,12 @@ function project_refresh_task(id_project, task) {
 
 	$item.find('div.progressbaruser').css('width', progress+'%');	
 	
-/*	
+
 	var t = new Date().getTime();
 	if(task.time_date_end>0 && task.time_date_end<t) {
 		$item.css('background-color','red');
 	}	
-	*/
+	
 }
 function project_get_task(id_project, id_task) {
 	var taskReturn="";
@@ -209,7 +209,6 @@ function project_getsave_task(id_project, id_task) {
 }
 function project_save_task(id_project, task) {
 	$('#task-'+task.id).css({ opacity:.5 });
-	
 	$.ajax({
 		url : "./script/interface.php"
 		,data: {

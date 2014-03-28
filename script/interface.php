@@ -4,7 +4,7 @@ require ('../config.php');
 
 $get = GETPOST('get','alpha');
 $put = GETPOST('put','alpha');
-
+	
 _put($db, $put);
 _get($db, $get);
 
@@ -17,10 +17,7 @@ function _get(&$db, $case) {
 			break;
 		case 'task' :
 			
-			$task=new Task($db);
-			$task->fetch((int)GETPOST('id'));
-			
-			print json_encode(_as_array($task));
+			print json_encode(_task($db, (int)GETPOST('id')));
 
 			break;
 			
@@ -84,12 +81,18 @@ global $langs;
 }
 
 function _as_array(&$object, $recursif=false) {
+global $langs;
 	$Tab=array();
-	
 		if(get_class($object)=='Task') {
 			
 			$object->aff_time = convertSecondToTime($object->duration_effective);
 			$object->aff_planned_workload = convertSecondToTime($object->planned_workload);
+	
+			$object->long_description.='';
+			if($object->date_start>0) $object->long_description .= $langs->trans('TaskDateStart').' : '.dol_print_date($object->date_start).'<br />';
+			if($object->date_end>0) $object->long_description .= $langs->trans('TaskDateEnd').' : '.dol_print_date($object->date_end).'<br />';
+			
+			$object->long_description.=$object->description;
 				
 		}
 	
@@ -100,7 +103,8 @@ function _as_array(&$object, $recursif=false) {
 				else $Tab[$key] = $value;
 			}
 			else if(strpos($key,'date_')===0){
-				$Tab['time_'.$key] = $Tab[$key];	
+				
+				$Tab['time_'.$key] = $value;	
 				
 				if(empty($value))$Tab[$key] = '0000-00-00 00:00:00';
 				else $Tab[$key] = date('Y-m-d H:i:s',$value);
@@ -116,8 +120,11 @@ function _as_array(&$object, $recursif=false) {
 function _put(&$db, $case) {
 	switch ($case) {
 		case 'task' :
+			
 			print json_encode(_task($db, (int)GETPOST('id'), $_REQUEST));
+			
 			break;
+			
 		case 'sort-task' :
 			
 			_sort_task($db, $_REQUEST['TTaskID']);
@@ -149,27 +156,28 @@ function _set_values(&$object, $values) {
 	}
 	
 }
-function _task(&$db, $id_task, $values) {
+function _task(&$db, $id_task, $values=array()) {
 global $user;
 
 	$task=new Task($db);
 	if($id_task) $task->fetch($id_task);
 	
-	_set_values($task, $values);
+	if(!empty($values)){
+		_set_values($task, $values);
 	
-	if($values['status']=='inprogress') {
-		if($task->progress==0)$task->progress = 5;
-		else if($task->progress==100)$task->progress = 95;
+		if($values['status']=='inprogress') {
+			if($task->progress==0)$task->progress = 5;
+			else if($task->progress==100)$task->progress = 95;
+		}
+		else if($values['status']=='finish') {
+			$task->progress = 100;
+		}	
+		else if($values['status']=='todo') {
+			$task->progress = 0;
+		}	
+	
+		$task->status = $values['status'];
 	}
-	else if($values['status']=='finish') {
-		$task->progress = 100;
-	}	
-	else if($values['status']=='todo') {
-		$task->progress = 0;
-	}	
-	
-	$task->status = $values['status'];
-	
 	//$task->velocity_ok = _is_current_velocity_ok($task);
 	
 	$task->update($user);
