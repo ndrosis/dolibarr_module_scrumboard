@@ -191,11 +191,11 @@ global $user, $langs;
 	return _as_array($task);
 }
 
-function _get_delivery_date_with_velocity(&$db, &$task, $velocity) {
+function _get_delivery_date_with_velocity(&$db, &$task, $velocity, $time=null) {
 	
 	$rest = $task->planned_workload - $task->duration_effective; // nombre de seconde restante
 	
-	$time = time();
+	if(is_null($time)) $time = time();
 	if($time<$task->start_date)$time = $task->start_date;
 	
 	
