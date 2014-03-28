@@ -10,3 +10,4 @@ HoursPerDay=H per day
 EndedThe=Ended the
 TaskWontfinishInTime=This task is not delivered on the due date
 TaskMightNotfinishInTime=This task may be not delivered on schedule
+TaskDateShouldDelivery=Delivery possible date if it start the scheduled day

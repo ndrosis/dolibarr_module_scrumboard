@@ -83,18 +83,6 @@ global $langs;
 function _as_array(&$object, $recursif=false) {
 global $langs;
 	$Tab=array();
-		if(get_class($object)=='Task') {
-			
-			$object->aff_time = convertSecondToTime($object->duration_effective);
-			$object->aff_planned_workload = convertSecondToTime($object->planned_workload);
-	
-			$object->long_description.='';
-			if($object->date_start>0) $object->long_description .= $langs->trans('TaskDateStart').' : '.dol_print_date($object->date_start).'<br />';
-			if($object->date_end>0) $object->long_description .= $langs->trans('TaskDateEnd').' : '.dol_print_date($object->date_end).'<br />';
-			
-			$object->long_description.=$object->description;
-				
-		}
 	
 		foreach ($object as $key => $value) {
 				
@@ -157,7 +145,7 @@ function _set_values(&$object, $values) {
 	
 }
 function _task(&$db, $id_task, $values=array()) {
-global $user;
+global $user, $langs;
 
 	$task=new Task($db);
 	if($id_task) $task->fetch($id_task);
@@ -177,13 +165,44 @@ global $user;
 		}	
 	
 		$task->status = $values['status'];
+		
+		$task->update($user);
+		
 	}
-	//$task->velocity_ok = _is_current_velocity_ok($task);
 	
-	$task->update($user);
+	$task->date_delivery = 0;
+	if($task->date_end >0 && $task->planned_workload>0) {
+		
+		$velocity = scrum_getVelocity($db, $task->fk_project);
+		$task->date_delivery = _get_delivery_date_with_velocity($db, $task, $velocity);
+		
+	}
 	
+	$task->aff_time = convertSecondToTime($task->duration_effective);
+	$task->aff_planned_workload = convertSecondToTime($task->planned_workload);
+
+	$task->long_description.='';
+	if($task->date_start>0) $task->long_description .= $langs->trans('TaskDateStart').' : '.dol_print_date($task->date_start).'<br />';
+	if($task->date_end>0) $task->long_description .= $langs->trans('TaskDateEnd').' : '.dol_print_date($task->date_end).'<br />';
+	if($task->date_delivery>0 && $task->date_delivery>$task->date_end) $task->long_description .= $langs->trans('TaskDateShouldDelivery').' : '.dol_print_date($task->date_delivery).'<br />';
+	
+	$task->long_description.=$task->description;
+
 	return _as_array($task);
 }
+
+function _get_delivery_date_with_velocity(&$db, &$task, $velocity) {
+	
+	$rest = $task->planned_workload - $task->duration_effective; // nombre de seconde restante
+	
+	$time = time();
+	if($time<$task->start_date)$time = $task->start_date;
+	
+	
+	$time += ( 86400 * $rest / $velocity  )  ;
+
+	return $time;
+}	
 
 function _tasks(&$db, $id_project, $status) {
 		
@@ -211,10 +230,7 @@ function _tasks(&$db, $id_project, $status) {
 		
 	$TTask = array();
 	while($obj = $db->fetch_object($res)) {
-		$t=new Task($db);
-		$t->fetch($obj->rowid);
-		
-		$TTask[] = array_merge( _as_array($t) , array('status'=>$status));
+		$TTask[] = array_merge( _task($db, $obj->rowid) , array('status'=>$status));
 	}
 	
 	return $TTask;

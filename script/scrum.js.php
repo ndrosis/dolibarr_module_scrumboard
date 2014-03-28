@@ -125,9 +125,13 @@ function project_refresh_task(id_project, task) {
 	$item.find('div.progressbaruser').css('width', progress+'%');	
 	
 
-	var t = new Date().getTime();
+	var t = new Date().getTime() /1000;
+	
 	if(task.time_date_end>0 && task.time_date_end<t) {
 		$item.css('background-color','red');
+	}	
+	else if(task.time_date_delivery>0 && task.time_date_delivery>task.time_date_end) {
+		$item.css('background-color','orange');
 	}	
 	
 }
@@ -159,14 +163,13 @@ function project_init_change_type(id_project) {
     	,receive: function( event, ui ) {
 			task=project_get_task(id_project, ui.item.attr('task-id'));
 			task.status = $(this).attr('rel');
-			
 			$('#task-'+task.id).css('top','');
 	        $('#task-'+task.id).css('left','');	
 			$('#list-task-'+task.status).prepend( $('#task-'+task.id) );	
 			console.log('#task-'+task.id+' --> '+'#list-task-'+task.status);	
 			
 			project_save_task(id_project, task);
-									        
+					        
 	  }  
 	  ,update:function(event,ui) {
 	  	var sortedIDs = $( this ).sortable( "toArray" );
@@ -225,6 +228,7 @@ function project_save_task(id_project, task) {
 	})
 	.done(function (task) {
 		project_refresh_task(id_project, task);
+		velocity(id_project);				
 		$('#task-'+task.id).css({ opacity:1 });
 	}); 
 	
