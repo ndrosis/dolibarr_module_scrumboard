@@ -225,6 +225,10 @@ global $user;
 
 	if($velocity==0) return false;
 
+	$project=new Project($db);
+	$project->fetch($id_project);
+
+
 	$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
 	WHERE fk_projet=".$id_project." AND progress<100
 	ORDER BY rang";
@@ -247,7 +251,9 @@ global $user;
 		$task->update($user);
 		
 	}
-
+	
+	$project->date_end = $current_time;
+	$project->update($user);
 
 }
 
