@@ -36,6 +36,12 @@ td.projectDrag {
 	border:1px solid #2AA8B9;
 	border-bottom: 1px solid #194B7E;
 }
+.projectDrag ul li.day {
+	font-size:11px;
+	padding:5px 10px;
+	background: #999999;
+}
+
 .projectDrag ul li div.progressbar, .projectDrag ul li div.progressbaruser {
 	position:absolute;
 	background: #000;

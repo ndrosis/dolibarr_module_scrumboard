@@ -50,6 +50,8 @@ function project_get_tasks(id_project, liste, status) {
 		$.each(tasks, function(i, task) {
 			project_draw_task(id_project, task, $('#'+liste));
 		});
+			
+		project_addDayAndWeek('#'+liste);	
 				
 	}); 
 }
@@ -103,6 +105,9 @@ function project_refresh_task(id_project, task) {
 	$item.find('[rel=time]').html(task.aff_time + '<br />' + task.aff_planned_workload).attr('task-id', task.id).off().on("click", function() {
 		pop_time( $('#scrum').attr('id_projet'), $(this).attr('task-id'));
 	});
+
+	$item.attr('time_ref', task.time_date_delivery);
+	$item.attr('n_semaine', 0);
 
 	var percent_progress = Math.round(task.duration_effective / task.planned_workload * 100);
 	if(percent_progress > 100) {
@@ -245,14 +250,43 @@ function project_develop_task(id_task) {
 }
 function project_loadTasks(id_projet) {
 	
-					/*project_get_tasks(id_projet, 'list-task-idea', 'idea');*/
-				project_get_tasks(id_projet , 'list-task-todo', 'todo');
-				project_get_tasks(id_projet , 'list-task-inprogress', 'inprogress');
-				project_get_tasks(id_projet , 'list-task-finish', 'finish');
-				
-			
-	
+		/*project_get_tasks(id_projet, 'list-task-idea', 'idea');*/
+	project_get_tasks(id_projet , 'list-task-todo', 'todo');
+	project_get_tasks(id_projet , 'list-task-inprogress', 'inprogress');
+	project_get_tasks(id_projet , 'list-task-finish', 'finish');
 }
+
+function project_addDayAndWeek(mask) {
+	$(mask+' li.day').remove();
+	$(mask+' li.week').remove();
+
+	// ajout des jours sur tâches
+	var last_t_deb = 0;
+	var last_n_semaine = 0;
+	
+	$(mask+' li').each(function() {
+		t_deb = parseInt($(this).attr('time_ref'));
+		n_semaine = parseInt($(this).attr('n_semaine'));
+		if(n_semaine!=last_n_semaine) {
+			$(this).before('<li class="week unsortable"><?php $langs->trans('Week') ?>'+n_semaine+'</li>');
+			last_n_semaine = n_semaine;
+		}
+		
+		if(!isNaN(t_deb) && t_deb!=last_t_deb) {
+			var d = new Date(t_deb * 1000);	
+				
+			jour = d.toLocaleDateString();
+			
+			$(this).before('<li class="day unsortable">'+jour+'</li>');
+			last_t_deb = t_deb;
+		}
+
+		
+	});
+
+}
+
+
 function create_task(id_projet) {
 	
 	if($('#dialog-create-task').length==0) {
