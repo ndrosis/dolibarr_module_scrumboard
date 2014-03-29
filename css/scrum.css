@@ -40,6 +40,7 @@ td.projectDrag {
 	font-size:11px;
 	padding:5px 10px;
 	background: #999999;
+	cursor: auto;
 }
 
 .projectDrag ul li div.progressbar, .projectDrag ul li div.progressbaruser {

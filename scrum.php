@@ -72,7 +72,7 @@
 		print '</td></tr>';
 
 		// Statut
-		print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'</td></tr>';
+		print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'<span rel="tobelate" date_end="'.$object->date_end.'"></span></td></tr>';
 	
 		// Statut
 		print '<tr><td>'.$langs->trans("CurrentVelocity").'</td><td rel="currentVelocity"></td></tr>';

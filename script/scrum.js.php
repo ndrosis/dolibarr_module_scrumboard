@@ -22,6 +22,15 @@ function project_velocity(id_project) {
 		}
 		if(data.todo) {
 			$('span[rel=velocityToDo]').html(data.todo);
+			var project_date_end=parseInt($('span[rel=tobelate]').attr('date_end'));
+			
+			if(data.time_todo>project_date_end) {
+				$('span[rel=tobelate]').html("<?php echo $langs->trans('ProjectWillBeLate'); ?>");
+			}
+			else {
+				$('span[rel=tobelate]').html("");
+			}
+			
 		}
 		if(data.velocity) {
 			$('#current-velocity').val(Math.round(data.velocity / 3600 * 100) / 100);
@@ -172,6 +181,7 @@ function project_init_change_type(id_project) {
     $('.task-list').sortable( {
     	connectWith: ".task-list"
     	, placeholder: "ui-state-highlight"
+    	, items: "li:not(.unsortable)"
     	,receive: function( event, ui ) {
 			task=project_get_task(id_project, ui.item.attr('task-id'));
 			task.status = $(this).attr('rel');
@@ -185,7 +195,8 @@ function project_init_change_type(id_project) {
 	  }  
 	  ,update:function(event,ui) {
 	  	var sortedIDs = $( this ).sortable( "toArray" );
-	  	
+	  	var listmask = '#'+$(this).attr('id');
+
 	  	var TTaskID=[];
 	  	$.each(sortedIDs, function(i, id) {
 	  		
@@ -201,6 +212,9 @@ function project_init_change_type(id_project) {
 				,TTaskID : TTaskID
 			}
 			,dataType: 'json'
+		})
+		.done(function(data) {
+			project_addDayAndWeek(listmask);
 		});
 	  	
 	  }
@@ -240,6 +254,7 @@ function project_save_task(id_project, task) {
 	})
 	.done(function (task) {
 		project_refresh_task(id_project, task);
+		project_addDayAndWeek('#list-task-'+task.statut);
 		project_velocity(id_project);				
 		$('#task-'+task.id).css({ opacity:1 });
 	}); 

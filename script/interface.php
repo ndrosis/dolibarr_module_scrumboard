@@ -92,8 +92,9 @@ global $langs;
 			
 			if($time_end_todo>$time_end_inprogress) $Tab['todo']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_todo);
 			$Tab['inprogress']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_inprogress);
-			
-			
+
+			$Tab['time_todo'] = $time_end_todo;			
+			$Tab['time_inprogress'] = $time_end_inprogress;			
 		}
 		
 		
