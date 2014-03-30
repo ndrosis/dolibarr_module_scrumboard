@@ -282,19 +282,33 @@ function project_addDayAndWeek(mask) {
 	$(mask+' li').each(function() {
 		t_deb = parseInt($(this).attr('time_ref'));
 		n_semaine = parseInt($(this).attr('n_semaine'));
-		if(n_semaine!=last_n_semaine) {
-			$(this).before('<li class="week unsortable"><?php $langs->trans('Week') ?>'+n_semaine+'</li>');
-			last_n_semaine = n_semaine;
-		}
+		<?php
 		
-		if(!isNaN(t_deb) && t_deb!=last_t_deb) {
-			var d = new Date(t_deb * 1000);	
-				
-			jour = d.toLocaleDateString();
+		if($conf->global->SCRUM_SEE_DELIVERYDATE_PER_WEEK) {
+		
+			?>if(n_semaine!=last_n_semaine) {
+				$(this).before('<li class="week unsortable"><?php $langs->trans('Week') ?>'+n_semaine+'</li>');
+				last_n_semaine = n_semaine;
+			}<?php
 			
-			$(this).before('<li class="day unsortable">'+jour+'</li>');
-			last_t_deb = t_deb;
 		}
+		?>
+		
+		<?php
+		
+		if($conf->global->SCRUM_SEE_DELIVERYDATE_PER_DAY) {
+		
+			?>if(!isNaN(t_deb) && t_deb!=last_t_deb) {
+				var d = new Date(t_deb * 1000);	
+					
+				jour = d.toLocaleDateString();
+				
+				$(this).before('<li class="day unsortable">'+jour+'</li>');
+				last_t_deb = t_deb;
+			}<?php
+			
+		}
+		?>
 
 		
 	});
