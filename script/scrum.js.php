@@ -195,7 +195,9 @@ function project_init_change_type(id_project) {
 	  }  
 	  ,update:function(event,ui) {
 	  	var sortedIDs = $( this ).sortable( "toArray" );
-	  	var listmask = '#'+$(this).attr('id');
+	  	
+	  	var listname = $(this).attr('id');
+	  	var listmask = '#'+listname;
 
 	  	var TTaskID=[];
 	  	$.each(sortedIDs, function(i, id) {
@@ -209,6 +211,7 @@ function project_init_change_type(id_project) {
 			,data: {
 				json:1
 				,put : 'sort-task'
+				,list : listname
 				,TTaskID : TTaskID
 			}
 			,dataType: 'json'
@@ -272,6 +275,11 @@ function project_loadTasks(id_projet) {
 }
 
 function project_addDayAndWeek(mask) {
+	
+	if(mask.indexOf('finish')>0) {
+		return false;
+	}
+	
 	$(mask+' li.day').remove();
 	$(mask+' li.week').remove();
 
