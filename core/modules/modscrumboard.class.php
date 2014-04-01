@@ -105,7 +105,7 @@ class modscrumboard extends DolibarrModules
 
         // Config pages. Put here list of php pages
         // stored into scrumboard/admin directory, used to setup module.
-        $this->config_page_url = false;
+        $this->config_page_url = 'scrumboard_setup.php@scrumboard';
 
         // Dependencies
         // List of modules id that must be enabled if this module is enabled
@@ -439,6 +439,12 @@ class modscrumboard extends DolibarrModules
         $result = $this->loadTables();
 
 		dolibarr_set_const($this->db, 'SCRUM_DEFAULT_VELOCITY', 7,'chaine',1,'Vélocité par défaut d\'un projet',0);
+		dolibarr_set_const($this->db, 'SCRUM_VELOCITY_NUMBER_OF_DAY', 14,'chaine',1,'Vélocité calculée sur ce nombre de jour',0);
+		
+		dolibarr_set_const($this->db, 'SCRUM_SEE_DELIVERYDATE_PER_DAY', 7,'chaine',1,'Ajoute des titres par jour',0);
+		dolibarr_set_const($this->db, 'SCRUM_SEE_DELIVERYDATE_PER_WEEK', 7,'chaine',0,'Ajoute des titres par semaine',0);
+
+		dolibarr_set_const($this->db, 'SCRUM_SEE_DELIVERYDATE_PER_WEEK', 1,'chaine',1,'',0);
 	
 
 

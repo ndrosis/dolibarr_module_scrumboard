@@ -57,7 +57,9 @@ function scrumboardAdminPrepareHead()
 function scrum_getVelocity(&$db, $id_project) {
 	global $conf;
 	
-	$t2week= strtotime('-2weeks');
+	$n_day = ($conf->global->SCRUM_VELOCITY_NUMBER_OF_DAY) ? $conf->global->SCRUM_VELOCITY_NUMBER_OF_DAY : 14;
+	
+	$t2week= strtotime('-'.$n_day.' days');
 	
 	$projet=new Project($db);
 	$projet->fetch($id_project);

@@ -22,6 +22,15 @@ function project_velocity(id_project) {
 		}
 		if(data.todo) {
 			$('span[rel=velocityToDo]').html(data.todo);
+			var project_date_end=parseInt($('span[rel=tobelate]').attr('date_end'));
+			
+			if(data.time_todo>project_date_end) {
+				$('span[rel=tobelate]').html("<?php echo $langs->trans('ProjectWillBeLate'); ?>");
+			}
+			else {
+				$('span[rel=tobelate]').html("");
+			}
+			
 		}
 		if(data.velocity) {
 			$('#current-velocity').val(Math.round(data.velocity / 3600 * 100) / 100);
@@ -50,6 +59,8 @@ function project_get_tasks(id_project, liste, status) {
 		$.each(tasks, function(i, task) {
 			project_draw_task(id_project, task, $('#'+liste));
 		});
+			
+		project_addDayAndWeek('#'+liste);	
 				
 	}); 
 }
@@ -100,9 +111,12 @@ function project_refresh_task(id_project, task) {
 	$item.find('[rel=label]').html(task.label).attr("title", task.long_description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});
 	$item.find('[rel=ref]').html(task.ref).attr("href", '<?php echo dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
-	$item.find('[rel=time]').html(task.aff_time + '<br />' + task.aff_planned_workload).attr('task-id', task.id).off().on("click", function() {
+	$item.find('[rel=time]').html('<span rel="real_time" class="nodisplaybutinprogress">'+task.aff_time + '</span><br /><span rel="planned_time">' + task.aff_planned_workload + '</span>').attr('task-id', task.id).off().on("click", function() {
 		pop_time( $('#scrum').attr('id_projet'), $(this).attr('task-id'));
 	});
+
+	$item.attr('time_ref', task.time_date_delivery);
+	$item.attr('n_semaine', 0);
 
 	var percent_progress = Math.round(task.duration_effective / task.planned_workload * 100);
 	if(percent_progress > 100) {
@@ -113,7 +127,7 @@ function project_refresh_task(id_project, task) {
 	
 	}
 	else if(percent_progress > progress) {
-		$item.find('div.progressbar').css('background-color', 'orange');
+		$item.find('div.progressbar').css('background-color', '#ee9100');
 		$item.find('div.progressbar').css('width', percent_progress+'%');
 		$item.find('div.progressbar').css('opacity', '1');
 		$item.find('div.progressbaruser').css('height', '7px');	
@@ -134,7 +148,7 @@ function project_refresh_task(id_project, task) {
 		if(task.time_date_end>0 && task.time_date_end<t) {
 			$item.css('background-color','red');
 		}	
-		else if(task.time_date_delivery>0 && task.time_date_delivery>task.time_date_end) {
+		else if(task.time_date_delivery>0 && task.time_date_delivery>task.time_date_end+86399) {
 			$item.css('background-color','orange');
 		}	
 		
@@ -167,6 +181,7 @@ function project_init_change_type(id_project) {
     $('.task-list').sortable( {
     	connectWith: ".task-list"
     	, placeholder: "ui-state-highlight"
+    	, items: "li:not(.unsortable)"
     	,receive: function( event, ui ) {
 			task=project_get_task(id_project, ui.item.attr('task-id'));
 			task.status = $(this).attr('rel');
@@ -181,6 +196,9 @@ function project_init_change_type(id_project) {
 	  ,update:function(event,ui) {
 	  	var sortedIDs = $( this ).sortable( "toArray" );
 	  	
+	  	var listname = $(this).attr('id');
+	  	var listmask = '#'+listname;
+
 	  	var TTaskID=[];
 	  	$.each(sortedIDs, function(i, id) {
 	  		
@@ -193,9 +211,13 @@ function project_init_change_type(id_project) {
 			,data: {
 				json:1
 				,put : 'sort-task'
+				,list : listname
 				,TTaskID : TTaskID
 			}
 			,dataType: 'json'
+		})
+		.done(function(data) {
+			project_addDayAndWeek(listmask);
 		});
 	  	
 	  }
@@ -235,6 +257,7 @@ function project_save_task(id_project, task) {
 	})
 	.done(function (task) {
 		project_refresh_task(id_project, task);
+		project_addDayAndWeek('#list-task-'+task.statut);
 		project_velocity(id_project);				
 		$('#task-'+task.id).css({ opacity:1 });
 	}); 
@@ -245,14 +268,62 @@ function project_develop_task(id_task) {
 }
 function project_loadTasks(id_projet) {
 	
-					/*project_get_tasks(id_projet, 'list-task-idea', 'idea');*/
-				project_get_tasks(id_projet , 'list-task-todo', 'todo');
-				project_get_tasks(id_projet , 'list-task-inprogress', 'inprogress');
-				project_get_tasks(id_projet , 'list-task-finish', 'finish');
-				
-			
-	
+		/*project_get_tasks(id_projet, 'list-task-idea', 'idea');*/
+	project_get_tasks(id_projet , 'list-task-todo', 'todo');
+	project_get_tasks(id_projet , 'list-task-inprogress', 'inprogress');
+	project_get_tasks(id_projet , 'list-task-finish', 'finish');
 }
+
+function project_addDayAndWeek(mask) {
+	
+	if(mask.indexOf('finish')>0) {
+		return false;
+	}
+	
+	$(mask+' li.day').remove();
+	$(mask+' li.week').remove();
+
+	// ajout des jours sur tâches
+	var last_t_deb = 0;
+	var last_n_semaine = 0;
+	
+	$(mask+' li').each(function() {
+		t_deb = parseInt($(this).attr('time_ref'));
+		n_semaine = parseInt($(this).attr('n_semaine'));
+		<?php
+		
+		if($conf->global->SCRUM_SEE_DELIVERYDATE_PER_WEEK) {
+		
+			?>if(n_semaine!=last_n_semaine) {
+				$(this).before('<li class="week unsortable"><?php $langs->trans('Week') ?>'+n_semaine+'</li>');
+				last_n_semaine = n_semaine;
+			}<?php
+			
+		}
+		?>
+		
+		<?php
+		
+		if($conf->global->SCRUM_SEE_DELIVERYDATE_PER_DAY) {
+		
+			?>if(!isNaN(t_deb) && t_deb!=last_t_deb) {
+				var d = new Date(t_deb * 1000);	
+					
+				jour = d.toLocaleDateString();
+				
+				$(this).before('<li class="day unsortable">'+jour+'</li>');
+				last_t_deb = t_deb;
+			}<?php
+			
+		}
+		?>
+
+		
+	});
+
+}
+
+
 function create_task(id_projet) {
 	
 	if($('#dialog-create-task').length==0) {

@@ -72,7 +72,7 @@
 		print '</td></tr>';
 
 		// Statut
-		print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'</td></tr>';
+		print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'<span rel="tobelate" date_end="'.$object->date_end.'"></span></td></tr>';
 	
 		// Statut
 		print '<tr><td>'.$langs->trans("CurrentVelocity").'</td><td rel="currentVelocity"></td></tr>';
@@ -168,7 +168,7 @@
 				<div class="progressbaruser"></div>
 				<div class="progressbar"></div>
 				<div class="actions">
-				<select rel="progress">
+				<select rel="progress" class="nodisplaybutinprogress">
 					<?php
 					for($i=5; $i<=95;$i+=5) {
 						?><option value="<?php echo $i ?>"><?php echo $i ?>%</option><?php

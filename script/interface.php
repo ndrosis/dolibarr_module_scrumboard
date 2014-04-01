@@ -40,7 +40,7 @@ function _put(&$db, $case) {
 			
 		case 'sort-task' :
 			
-			_sort_task($db, $_REQUEST['TTaskID']);
+			_sort_task($db, $_REQUEST['TTaskID'],$_REQUEST['list']);
 			
 			break;
 		case 'reset-date-task':
@@ -92,8 +92,9 @@ global $langs;
 			
 			if($time_end_todo>$time_end_inprogress) $Tab['todo']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_todo);
 			$Tab['inprogress']=', '.$langs->trans('EndedThe').' '.date('d/m/Y', $time_end_inprogress);
-			
-			
+
+			$Tab['time_todo'] = $time_end_todo;			
+			$Tab['time_inprogress'] = $time_end_inprogress;			
 		}
 		
 		
@@ -129,12 +130,16 @@ global $langs;
 	
 }
 
-function _sort_task(&$db, $TTask) {
+function _sort_task(&$db, $TTask, $listname) {
+	
+	if(strpos($listname, 'inprogress')!==false)$step = 1000;
+	else if(strpos($listname, 'todo')!==false)$step = 2000;
+	else $step = 0;
 	
 	foreach($TTask as $rank=>$id) {
 		$task=new Task($db);
 		$task->fetch($id);
-		$task->rang = $rank;
+		$task->rang = $step + $rank;
 		$task->update($db);
 	}
 	
@@ -199,17 +204,48 @@ global $user, $langs;
 	return _as_array($task);
 }
 
-function _get_delivery_date_with_velocity(&$db, &$task, $velocity, $time=null) {
+function _get_task_just_before(&$db, &$task) {
+	if($task->rang<=0)return false;
 	
+	$sql="SELECT rowid FROM ".MAIN_DB_PREFIX."projet_task 
+		WHERE rang<".(int)$task->rang."
+		ORDER BY rang DESC
+		LIMIT 1 ";
+	$res=$db->query($sql);
+	if($obj=$db->fetch_object($res)) {
+		$task_before=new Task($db);
+		$task_before->fetch($obj->rowid);
+		return $task_before;
+	}
+	else {
+		return false;
+	}
+	
+}
+
+function _get_delivery_date_with_velocity(&$db, &$task, $velocity, $time=null) {
+global $conf;
+
 	if( (float)DOL_VERSION <= 3.4 || $velocity==0) {
 		return 0;	
 	
 	}
 	else {
 		$rest = $task->planned_workload - $task->duration_effective; // nombre de seconde restante
-		
-		if(is_null($time)) {
+
+		if($conf->global->SCRUM_SET_DELIVERYDATE_BY_OTHER_TASK==0) {
 			$time = time();
+		}
+		else if(is_null($time)) {
+			$task_just_before = _get_task_just_before($db, $task);
+			if($task_just_before===false) {
+				$time = time();
+			}
+			else {
+				$time = _get_delivery_date_with_velocity($db, $task_just_before,$velocity);
+				
+			}
+			
 			if($time<$task->start_date)$time = $task->start_date;
 		}
 		
