@@ -59,8 +59,8 @@ td.projectDrag {
 
 .projectDrag ul li div.actions {
 	float:right;
-	display:none;
 }
+
 .projectDrag ul li.idea {
 	background: #eee;
 }
@@ -70,15 +70,20 @@ td.projectDrag {
 .projectDrag ul li.inprogress {
 	background: green;
 }
-.projectDrag ul li.inprogress div.actions {
-	display:block;
-}
 
 .projectDrag ul li.inprogress div.actions select.progress {
 	display:inline-block;
 }
-.projectDrag ul li.inprogress div.actions span[rel=time] {
+.projectDrag ul li div.actions span[rel=time] {
 	font-size:12px;
+	display:inline-block;
+}
+
+.projectDrag ul li div.actions .nodisplaybutinprogress {
+	display:none;
+}
+
+.projectDrag ul li.inprogress div.actions .nodisplaybutinprogress {
 	display:inline-block;
 }
 

@@ -111,7 +111,7 @@ function project_refresh_task(id_project, task) {
 	$item.find('[rel=label]').html(task.label).attr("title", task.long_description).tipTip({maxWidth: "600px", edgeOffset: 10, delay: 50, fadeIn: 50, fadeOut: 50});
 	$item.find('[rel=ref]').html(task.ref).attr("href", '<?php echo dol_buildpath('/projet/tasks/task.php?withproject=1&id=',1) ?>'+task.id);
 	
-	$item.find('[rel=time]').html(task.aff_time + '<br />' + task.aff_planned_workload).attr('task-id', task.id).off().on("click", function() {
+	$item.find('[rel=time]').html('<span rel="real_time" class="nodisplaybutinprogress">'+task.aff_time + '</span><br /><span rel="planned_time">' + task.aff_planned_workload + '</span>').attr('task-id', task.id).off().on("click", function() {
 		pop_time( $('#scrum').attr('id_projet'), $(this).attr('task-id'));
 	});
 
@@ -127,7 +127,7 @@ function project_refresh_task(id_project, task) {
 	
 	}
 	else if(percent_progress > progress) {
-		$item.find('div.progressbar').css('background-color', 'orange');
+		$item.find('div.progressbar').css('background-color', '#ee9100');
 		$item.find('div.progressbar').css('width', percent_progress+'%');
 		$item.find('div.progressbar').css('opacity', '1');
 		$item.find('div.progressbaruser').css('height', '7px');	
@@ -148,7 +148,7 @@ function project_refresh_task(id_project, task) {
 		if(task.time_date_end>0 && task.time_date_end<t) {
 			$item.css('background-color','red');
 		}	
-		else if(task.time_date_delivery>0 && task.time_date_delivery>task.time_date_end) {
+		else if(task.time_date_delivery>0 && task.time_date_delivery>task.time_date_end+86399) {
 			$item.css('background-color','orange');
 		}	
 		

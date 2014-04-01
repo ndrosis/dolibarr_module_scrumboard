@@ -45,6 +45,7 @@ if($action=='save') {
 		
 	}
 	
+	setEventMessage( $langs->trans('RegisterSuccess') );
 }
 
 
@@ -93,6 +94,22 @@ function showParameters() {
 				}
 				else {
 					 ?><a href="?action=save&TDivers[SCRUM_SEE_DELIVERYDATE_PER_WEEK]=0"><?=img_picto($langs->trans("Activated"),'switch_on'); ?></a><?php
+					
+				}
+			
+			?></td>				
+		</tr>
+
+		<tr>
+			<td><?php echo $langs->trans('SetDeliveryDateByOtherTask') ?></td><td><?php
+			
+				if($conf->global->SCRUM_SET_DELIVERYDATE_BY_OTHER_TASK==0) {
+					
+					 ?><a href="?action=save&TDivers[SCRUM_SET_DELIVERYDATE_BY_OTHER_TASK]=1"><?=img_picto($langs->trans("Disabled"),'switch_off'); ?></a><?php
+					
+				}
+				else {
+					 ?><a href="?action=save&TDivers[SCRUM_SET_DELIVERYDATE_BY_OTHER_TASK]=0"><?=img_picto($langs->trans("Activated"),'switch_on'); ?></a><?php
 					
 				}
 			

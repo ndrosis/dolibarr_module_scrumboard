@@ -133,7 +133,7 @@ global $langs;
 function _sort_task(&$db, $TTask, $listname) {
 	
 	if(strpos($listname, 'inprogress')!==false)$step = 1000;
-	else if(strpos($listname, 'finish')!==false)$step = 2000;
+	else if(strpos($listname, 'todo')!==false)$step = 2000;
 	else $step = 0;
 	
 	foreach($TTask as $rank=>$id) {
@@ -224,15 +224,19 @@ function _get_task_just_before(&$db, &$task) {
 }
 
 function _get_delivery_date_with_velocity(&$db, &$task, $velocity, $time=null) {
-	
+global $conf;
+
 	if( (float)DOL_VERSION <= 3.4 || $velocity==0) {
 		return 0;	
 	
 	}
 	else {
 		$rest = $task->planned_workload - $task->duration_effective; // nombre de seconde restante
-		
-		if(is_null($time)) {
+
+		if($conf->global->SCRUM_SET_DELIVERYDATE_BY_OTHER_TASK==0) {
+			$time = time();
+		}
+		else if(is_null($time)) {
 			$task_just_before = _get_task_just_before($db, $task);
 			if($task_just_before===false) {
 				$time = time();

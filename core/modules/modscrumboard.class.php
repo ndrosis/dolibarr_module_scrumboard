@@ -441,8 +441,10 @@ class modscrumboard extends DolibarrModules
 		dolibarr_set_const($this->db, 'SCRUM_DEFAULT_VELOCITY', 7,'chaine',1,'Vélocité par défaut d\'un projet',0);
 		dolibarr_set_const($this->db, 'SCRUM_VELOCITY_NUMBER_OF_DAY', 14,'chaine',1,'Vélocité calculée sur ce nombre de jour',0);
 		
-		dolibarr_set_const($this->db, 'SCRUM_SEE_DELIVERYDATE_PER_DAY', 7,'chaine',0,'Ajoute des titres par jour',0);
+		dolibarr_set_const($this->db, 'SCRUM_SEE_DELIVERYDATE_PER_DAY', 7,'chaine',1,'Ajoute des titres par jour',0);
 		dolibarr_set_const($this->db, 'SCRUM_SEE_DELIVERYDATE_PER_WEEK', 7,'chaine',0,'Ajoute des titres par semaine',0);
+
+		dolibarr_set_const($this->db, 'SCRUM_SEE_DELIVERYDATE_PER_WEEK', 1,'chaine',1,'',0);
 	
 
 

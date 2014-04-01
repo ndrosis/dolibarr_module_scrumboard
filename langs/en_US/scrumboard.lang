@@ -17,3 +17,4 @@ ResetDate=Reset the dates ?
 ResetDateTask=Reset task dates
 ActivateTitleDatePerDay=Activate milestone per day
 ActivateTitleDatePerWeek=Activate milestone per week
+SetDeliveryDateByOtherTask=Base delivery date on other tasks delivery date

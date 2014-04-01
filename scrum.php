@@ -168,7 +168,7 @@
 				<div class="progressbaruser"></div>
 				<div class="progressbar"></div>
 				<div class="actions">
-				<select rel="progress">
+				<select rel="progress" class="nodisplaybutinprogress">
 					<?php
 					for($i=5; $i<=95;$i+=5) {
 						?><option value="<?php echo $i ?>"><?php echo $i ?>%</option><?php
