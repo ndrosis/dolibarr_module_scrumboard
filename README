@@ -1,1 +1,6 @@
-Issu du projet test R&D fonctionnel de https://github.com/azriel68/AToMicERP
+Module for Dolibarr
+adding a tab to a project card for managing tasks via a scrum board. Included features to update task percentage and record times, progression bar and possible date of delivery, date task auto-reset
+
+
+Author Alexis Algoud - ATM Consulting
+From the alpha project AToMicERP https://github.com/azriel68/AToMicERP
